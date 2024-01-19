@@ -1,5 +1,5 @@
 {
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
@@ -30,7 +30,8 @@
   "type": "module",
   "exports": {
     "import": "./dist/index.js",
-    "require": "./dist/index.cjs"
+    "require": "./dist/index.cjs",
+    "types": "./dist/types/index.d.ts"
   },
   "repository": {
     "type": "git",
