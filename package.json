@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
@@ -8,7 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@regulaforensics/document-reader-typings": "git+https://github.com/regulaforensics/document-reader-typings.git",
+    "@regulaforensics/document-reader-typings": "^0.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "reflect-metadata": "^0.2.1"
