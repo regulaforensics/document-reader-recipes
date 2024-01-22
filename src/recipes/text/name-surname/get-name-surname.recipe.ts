@@ -3,6 +3,7 @@ import {
   eLCID,
   eVisualFieldType,
   ProcessResponse,
+  TextField,
   TextResultContainer
 } from '@regulaforensics/document-reader-typings'
 import { firstBy } from 'thenby'
@@ -21,10 +22,9 @@ const SCORE_SHIFT = 3
 export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'UNKNOWN'): RNameSurname => {
   const result: RNameSurname = new RNameSurname()
 
-  const textContainer: TextResultContainer | undefined = input.ContainerList.List
-    .find((i): i is TextResultContainer => i instanceof TextResultContainer)
+  const containers = TextResultContainer.fromProcessResponse(input)
 
-  if (!textContainer) {
+  if (!containers.length) {
     return RNameSurname.fromPlain({
       value: unknownValue,
       checkResult: eCheckResult.ERROR,
@@ -39,13 +39,12 @@ export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'U
     value: string
   }[] = []
 
-  textContainer.Text.fieldList
-    .filter((i) => i.fieldType === eVisualFieldType.SURNAME_AND_GIVEN_NAMES)
-    .forEach((field) => {
-      if (!field.value) {
-        return
-      }
+  const nameAndSurnameFields = TextField.fromContainers(containers, eVisualFieldType.SURNAME_AND_GIVEN_NAMES)
 
+  if (nameAndSurnameFields.length) {
+    const field = nameAndSurnameFields[0]
+
+    if (field.value) {
       let score = 1 // SURNAME_AND_GIVEN_NAMES is preferred, that's why the score is initially higher
 
       score = field.status === eCheckResult.OK ? score + SCORE_SHIFT : score - SCORE_SHIFT
@@ -58,33 +57,33 @@ export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'U
         checkResult: field.status,
         value: field.value
       })
-    })
+    }
+  }
 
-    //try to find name
-    textContainer.Text.fieldList
-      .filter((i) => i.fieldType === eVisualFieldType.GIVEN_NAMES)
-      .forEach((field) => {
-        // try to find surname pair
-        const surname = textContainer.Text.fieldList
-          .find((i) => i.fieldType === eVisualFieldType.SURNAME && i.lcid === field.lcid && i.status === field.status)
+  const namesFields = TextField.fromContainers(containers, eVisualFieldType.GIVEN_NAMES)
 
-        if (!surname) {
-          return
-        }
+  if (namesFields.length) {
+    const field = namesFields[0]
+    const textContainer = containers[0]
 
-        let score = 0
+    const surname = textContainer.Text.fieldList
+      .find((i) => i.fieldType === eVisualFieldType.SURNAME && i.lcid === field.lcid && i.status === field.status)
 
-        score = field.status === eCheckResult.OK ? score + SCORE_SHIFT : score - SCORE_SHIFT
-        score = typeof field.lcid !== 'undefined' ? score + SCORE_SHIFT : score - SCORE_SHIFT
-        score = field.lcid === eLCID.LATIN ? score + SCORE_SHIFT : score - SCORE_SHIFT
+    if (surname) {
+      let score = 0
 
-        candidates.push({
-          score,
-          lcid: field.lcid,
-          checkResult: field.status,
-          value: `${surname.value} ${field.value}`
-        })
+      score = field.status === eCheckResult.OK ? score + SCORE_SHIFT : score - SCORE_SHIFT
+      score = typeof field.lcid !== 'undefined' ? score + SCORE_SHIFT : score - SCORE_SHIFT
+      score = field.lcid === eLCID.LATIN ? score + SCORE_SHIFT : score - SCORE_SHIFT
+
+      candidates.push({
+        score,
+        lcid: field.lcid,
+        checkResult: field.status,
+        value: `${surname.value} ${field.value}`
       })
+    }
+  }
 
   const candidatesByScore = candidates.sort(firstBy(i => i.score, 'desc'))
 
