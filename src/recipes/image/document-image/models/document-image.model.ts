@@ -2,7 +2,7 @@ import { Type } from 'class-transformer'
 import { IsDefined, IsEnum, IsString, ValidateNested } from 'class-validator'
 import { eLights } from '@regulaforensics/document-reader-typings'
 
-import { RDocumentImagePage, iRDocumentImagePage } from './r-document-image-page.model'
+import { RDocumentImagePage, iRDocumentImagePage } from './document-image-page.model'
 
 
 export interface iRDocumentImage {

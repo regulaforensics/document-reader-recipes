@@ -1,15 +1,15 @@
 import { eCheckResult, ProcessResponse } from '@regulaforensics/document-reader-typings'
 
 import rawDocReaderResponse from '@/test-data/0.json'
+import { eOpticalStatusField } from './models'
 import { getDetailedStatus } from './get-detailed-status.recipe'
-import { eOpticalStatusField } from '@/recipes/status/detailed-status/models'
 
 
-describe('getDocumentImage', () => {
+describe('getDetailedStatus', () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
 
-  test('should return status', async () => {
-    const result = await getDetailedStatus(docReaderResponse)
+  test('should return status', () => {
+    const result = getDetailedStatus(docReaderResponse)
 
     expect(result.optical[eOpticalStatusField.DOC_TYPE]).toBe(eCheckResult.OK)
     expect(result.optical[eOpticalStatusField.OVERALL]).toBe(eCheckResult.ERROR)

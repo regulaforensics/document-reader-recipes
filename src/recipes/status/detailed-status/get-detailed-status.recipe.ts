@@ -3,7 +3,7 @@ import { eCheckResult, ProcessResponse, StatusContainer } from '@regulaforensics
 import { eOpticalStatusField, RDetailedStatus, ROpticalStatusDetails } from './models'
 
 
-export const getDetailedStatus = async (input: ProcessResponse): Promise<RDetailedStatus> => {
+export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
   const result = new RDetailedStatus()
   const container = StatusContainer.fromProcessResponse(input)
 

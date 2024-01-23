@@ -1,1 +1,1 @@
-export * from './r-name-surname'
+export * from './name-surname.model'
