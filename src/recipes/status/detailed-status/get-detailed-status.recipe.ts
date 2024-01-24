@@ -1,6 +1,6 @@
 import { eCheckResult, ProcessResponse, StatusContainer } from '@regulaforensics/document-reader-typings'
 
-import { eOpticalStatusField, RDetailedStatus, ROpticalStatusDetails } from './models'
+import { eOpticalStatusField, RDetailedStatus, RDetailedStatusOptical } from './models'
 
 
 export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
@@ -8,7 +8,7 @@ export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
   const container = StatusContainer.fromProcessResponse(input)
 
   if (!container.length) {
-    result.optical = new ROpticalStatusDetails()
+    result.optical = new RDetailedStatusOptical()
     result.optical[eOpticalStatusField.DOC_TYPE] = eCheckResult.WAS_NOT_DONE
     result.optical[eOpticalStatusField.OVERALL] = eCheckResult.WAS_NOT_DONE
     result.optical[eOpticalStatusField.TEXT] = eCheckResult.WAS_NOT_DONE
@@ -20,7 +20,7 @@ export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
 
   const status = container[0].Status
 
-  result.optical = new ROpticalStatusDetails()
+  result.optical = new RDetailedStatusOptical()
   result.optical[eOpticalStatusField.DOC_TYPE] = status.detailsOptical.docType
   result.optical[eOpticalStatusField.OVERALL] = status.overallStatus
   result.optical[eOpticalStatusField.TEXT] = status.detailsOptical.text

@@ -5,7 +5,7 @@ import { eOpticalStatusField } from './consts'
 import { Expose } from 'class-transformer'
 
 
-export interface iROpticalStatusDetails {
+export interface iRDetailedStatusOptical {
   [eOpticalStatusField.OVERALL]: eCheckResult
   [eOpticalStatusField.DOC_TYPE]: eCheckResult
   [eOpticalStatusField.EXPIRY]: eCheckResult
@@ -15,7 +15,7 @@ export interface iROpticalStatusDetails {
   [eOpticalStatusField.TEXT]: eCheckResult
 }
 
-export class ROpticalStatusDetails implements iROpticalStatusDetails {
+export class RDetailedStatusOptical implements iRDetailedStatusOptical {
   @Expose()
   @IsDefined()
   @IsEnum(eCheckResult)
