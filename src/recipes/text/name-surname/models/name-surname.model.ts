@@ -2,6 +2,8 @@ import { IsDefined, IsEnum, IsString } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 import { eCheckResult, eLCID } from '@regulaforensics/document-reader-typings'
 
+import { AllowPrimitives } from '@/types'
+
 
 /**
 * Name and surname, LCID and check result
@@ -58,8 +60,8 @@ export class RNameSurname implements iRNameSurname {
 
   /**
   * Create new RNameSurname instance from plain object
-  * @param {unknown} input - plain object
+  * @param {AllowPrimitives<iRNameSurname>} input - plain object
   * @returns {RNameSurname}
   */
-  static fromPlain = (input: unknown): RNameSurname => plainToClass(RNameSurname, input)
+  static fromPlain = (input: AllowPrimitives<iRNameSurname>): RNameSurname => plainToClass(RNameSurname, input)
 }

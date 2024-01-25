@@ -1,6 +1,7 @@
 import { IsDefined, IsNumber, ValidateNested } from 'class-validator'
-import { Type } from 'class-transformer'
+import { plainToClass, Type } from 'class-transformer'
 
+import { AllowPrimitives } from '@/types'
 import { iRDocumentBarcodeField, RDocumentBarcodeField } from './document-barcode-field.model'
 
 
@@ -18,4 +19,6 @@ export class RDocumentBarcode implements iRDocumentBarcode {
   @Type(() => RDocumentBarcodeField)
   @ValidateNested({ each: true })
   fields: RDocumentBarcodeField[]
+
+  static fromPlain = (input: AllowPrimitives<iRDocumentBarcode>): RDocumentBarcode => plainToClass(RDocumentBarcode, input)
 }
