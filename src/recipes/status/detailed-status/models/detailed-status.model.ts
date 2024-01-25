@@ -1,4 +1,4 @@
-import { IsDefined, ValidateNested } from 'class-validator'
+import { IsDefined, ValidateNested, validateSync } from 'class-validator'
 import { plainToClass, Type } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
@@ -16,4 +16,16 @@ export class RDetailedStatus implements iRDetailedStatus {
   optical: RDetailedStatusOptical
 
   static fromPlain = (input: AllowPrimitives<iRDetailedStatus>): RDetailedStatus => plainToClass(RDetailedStatus, input)
+
+  static isValid = (input: RDetailedStatus): boolean => {
+    const errors = validateSync(input)
+
+    if (errors.length) {
+      console.error(errors)
+
+      return false
+    }
+
+    return true
+  }
 }

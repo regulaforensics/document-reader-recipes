@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, IsString } from 'class-validator'
+import { IsDefined, IsNumber, IsString, validateSync } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
@@ -19,4 +19,16 @@ export class RDocumentIdentification implements iRDocumentIdentification {
   documentName: string
 
   static fromPlain = (input: AllowPrimitives<iRDocumentIdentification>): RDocumentIdentification => plainToClass(RDocumentIdentification, input)
+
+  static isValid = (input: RDocumentIdentification): boolean => {
+    const errors = validateSync(input)
+
+    if (errors.length) {
+      console.error(errors)
+
+      return false
+    }
+
+    return true
+  }
 }

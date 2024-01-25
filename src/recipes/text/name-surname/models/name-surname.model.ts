@@ -1,4 +1,4 @@
-import { IsDefined, IsEnum, IsString } from 'class-validator'
+import { IsDefined, IsEnum, IsString, validateSync } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 import { eCheckResult, eLCID } from '@regulaforensics/document-reader-typings'
 
@@ -64,4 +64,16 @@ export class RNameSurname implements iRNameSurname {
   * @returns {RNameSurname}
   */
   static fromPlain = (input: AllowPrimitives<iRNameSurname>): RNameSurname => plainToClass(RNameSurname, input)
+
+  static isValid = (input: RNameSurname): boolean => {
+    const errors = validateSync(input)
+
+    if (errors.length) {
+      console.error(errors)
+
+      return false
+    }
+
+    return true
+  }
 }

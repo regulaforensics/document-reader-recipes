@@ -4,14 +4,16 @@ import rawDocReaderResponse from '@/test-data/0.json'
 import { getGraphicField } from './get-graphic-field.recipe'
 
 
-describe('getGraphicField', () => {
+describe('getGraphicField', async () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
+  const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
+
+  test('should be defined', async () => {
+    expect(result).toBeDefined()
+  })
 
   test('should return valid image', async () => {
-    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
-
     expect(result.src).toMatch(/^data:image\/jpeg;base64/)
-    expect(result).toBeDefined()
   })
 
   test('should be able to return default image', async () => {

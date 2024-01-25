@@ -8,6 +8,11 @@ import {
 import { RDocumentBarcode, RDocumentBarcodeField, RDocumentBarcodeModuleData } from './models'
 
 
+/**
+* Get information about barcodes from the document
+* @param {ProcessResponse} input - ProcessResponse from DocReader
+* @returns {RDocumentBarcode[]} - array of RDocumentBarcode
+*/
 export const getDocumentBarcodes = (input: ProcessResponse): RDocumentBarcode[] => {
   const result: RDocumentBarcode[] = []
 
