@@ -22,7 +22,7 @@ export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
 
   result.optical = new RDetailedStatusOptical()
   result.optical[eOpticalStatusField.DOC_TYPE] = status.detailsOptical.docType
-  result.optical[eOpticalStatusField.OVERALL] = status.overallStatus
+  result.optical[eOpticalStatusField.OVERALL] = status.detailsOptical.overallStatus
   result.optical[eOpticalStatusField.TEXT] = status.detailsOptical.text
   result.optical[eOpticalStatusField.SECURITY] = status.detailsOptical.security
   result.optical[eOpticalStatusField.MRZ] = status.detailsOptical.mrz

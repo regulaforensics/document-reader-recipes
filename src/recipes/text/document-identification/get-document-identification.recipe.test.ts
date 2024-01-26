@@ -6,13 +6,17 @@ import { getDocumentIdentification } from './get-document-identification.recipe'
 
 describe('getDocumentIdentification', () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
+  const result = getDocumentIdentification(docReaderResponse)
+
+  test('should be defined', () => {
+    expect(result).toBeDefined()
+  })
 
   test('should return valid value', async () => {
-    const result = getDocumentIdentification(docReaderResponse)
-
-    expect(result.documentName).toBeDefined()
     expect(result.documentName).toEqual('Serbia - ePassport (2008)')
+  })
 
+  test('should return pageIndex', async () => {
     expect(result.pageIndex).toBeDefined()
     expect(result.pageIndex).toEqual(1)
   })

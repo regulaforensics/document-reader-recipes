@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, ValidateNested } from 'class-validator'
+import { IsDefined, IsNumber, ValidateNested, validateSync } from 'class-validator'
 import { plainToClass, Type } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
@@ -21,4 +21,16 @@ export class RImageQuality implements iRImageQuality {
   checks: RImageQualityCheck[]
 
   static fromPlain = (input: AllowPrimitives<iRImageQuality>): RImageQuality => plainToClass(RImageQuality, input)
+
+  static isValid = (input: RImageQuality): boolean => {
+    const errors = validateSync(input)
+
+    if (errors.length) {
+      console.error(errors)
+
+      return false
+    }
+
+    return true
+  }
 }
