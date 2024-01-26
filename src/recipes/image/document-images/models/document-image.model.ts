@@ -1,6 +1,6 @@
 import { plainToClass, Type } from 'class-transformer'
 import { IsDefined, IsEnum, IsString, ValidateNested, validateSync } from 'class-validator'
-import { eLights } from '@regulaforensics/document-reader-typings'
+import { eGraphicFieldType, eLights } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
 import { RDocumentImagePage, iRDocumentImagePage } from './document-image-page.model'
@@ -15,6 +15,12 @@ export interface iRDocumentImage {
   * @type {eLights}
   */
   light: eLights
+
+  /**
+  * Field type
+  * @type {eGraphicFieldType}
+  */
+  fieldType: eGraphicFieldType
 
   /**
   * Image file name
@@ -40,6 +46,14 @@ export class RDocumentImage implements iRDocumentImage {
   @IsDefined()
   @IsEnum(eLights)
   light: eLights
+
+  /**
+  * Field type
+  * @type {eGraphicFieldType}
+  */
+  @IsDefined()
+  @IsEnum(eGraphicFieldType)
+  fieldType: eGraphicFieldType
 
   /**
   * Image file name

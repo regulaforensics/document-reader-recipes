@@ -9,7 +9,10 @@ import { getImageDimensions } from '@/helpers'
 import { RDocumentImage, RDocumentImagePage } from './models'
 
 
-export const getDocumentImage = async (input: ProcessResponse): Promise<RDocumentImage[]> => {
+export const getDocumentImages = async (
+  input: ProcessResponse,
+  fieldTypes?: eGraphicFieldType[]
+): Promise<RDocumentImage[]> => {
   const result: RDocumentImage[] = []
 
   const containers = ImagesResultContainer.fromProcessResponse(input)
@@ -18,10 +21,10 @@ export const getDocumentImage = async (input: ProcessResponse): Promise<RDocumen
     return result
   }
 
-  const documentFront: ImageField[] = ImageField.fromContainers(containers, eGraphicFieldType.DOCUMENT_FRONT)
+  const imageFields: ImageField[] = ImageField.fromContainers(containers, fieldTypes)
 
-  if (documentFront.length) {
-    const field = documentFront[0]
+  for (let i = 0; i < imageFields.length; i++) {
+    const field = imageFields[i]
     const { fieldName } = field
 
     for (let j = 0; j < field.valueList.length; j++) {
@@ -29,12 +32,13 @@ export const getDocumentImage = async (input: ProcessResponse): Promise<RDocumen
 
       const { lightIndex, pageIndex, value } = page
 
-      let index = result.findIndex((i) => i.light === lightIndex)
+      let index = result.findIndex((i) => i.light === lightIndex && i.fieldType === field.fieldType)
 
       if (index < 0) {
         const current = new RDocumentImage()
 
         current.name = fieldName
+        current.fieldType = field.fieldType
         current.light = lightIndex
         current.pages = []
 
