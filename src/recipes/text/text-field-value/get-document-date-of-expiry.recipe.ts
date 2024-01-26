@@ -4,8 +4,28 @@ import { RTextFieldValue } from './models'
 import { getTextFieldValue } from './get-text-field-value.recipe'
 
 
+/**
+* Returns document date of expiry
+* @param {ProcessResponse} input
+* @param {true} allowDefault
+* @returns {RTextFieldValue}
+*/
 export function getDocumentDateOfExpiry(input: ProcessResponse, allowDefault?: true): RTextFieldValue;
+
+/**
+* Returns document date of expiry
+* @param {ProcessResponse} input
+* @param {false} allowDefault
+* @returns {RTextFieldValue | undefined}
+*/
 export function getDocumentDateOfExpiry(input: ProcessResponse, allowDefault?: false): RTextFieldValue | undefined;
+
+/**
+* Returns document date of expiry
+* @param {ProcessResponse} input
+* @param {boolean} allowDefault
+* @returns {RTextFieldValue | undefined}
+*/
 export function getDocumentDateOfExpiry(input: ProcessResponse, allowDefault: boolean = true): RTextFieldValue | undefined {
   if (allowDefault) {
     return getTextFieldValue(input, eVisualFieldType.DATE_OF_EXPIRY, true)

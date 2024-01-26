@@ -1,4 +1,4 @@
-import { IsDefined, IsEnum, IsString, validateSync } from 'class-validator'
+import { IsDefined, IsEnum, IsString, validateSync, ValidationError } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 import { eCheckResult, eLCID } from '@regulaforensics/document-reader-typings'
 
@@ -65,15 +65,21 @@ export class RNameSurname implements iRNameSurname {
   */
   static fromPlain = (input: AllowPrimitives<iRNameSurname>): RNameSurname => plainToClass(RNameSurname, input)
 
-  static isValid = (input: RNameSurname): boolean => {
-    const errors = validateSync(input)
+  /**
+  * Get validation errors
+  * @param {iRNameSurname} input - object to validate
+  * @returns {ValidationError[]}
+  */
+  static getValidationErrors = (input: RNameSurname): ValidationError[] => validateSync(input)
 
-    if (errors.length) {
-      console.error(errors)
+  /**
+  * Check if input is valid
+  * @param {RNameSurname | RNameSurname[]} input - Array of RNameSurname or single RNameSurname
+  * @returns {boolean}
+  */
+  static isValid = (input: RNameSurname | RNameSurname[]): boolean => {
+    const items = Array.isArray(input) ? input : [input]
 
-      return false
-    }
-
-    return true
+    return items.every((item) => RNameSurname.getValidationErrors(item).length === 0)
   }
 }

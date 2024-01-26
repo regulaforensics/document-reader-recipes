@@ -1,15 +1,21 @@
 import { OneCandidateContainerResultTypes, ProcessResponse } from '@regulaforensics/document-reader-typings'
 
 import rawDocReaderResponse from '@/test-data/0.json'
+import { RDocumentIdentification } from './models'
 import { getDocumentIdentification } from './get-document-identification.recipe'
 
 
 describe('getDocumentIdentification', () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
   const result = getDocumentIdentification(docReaderResponse)
+  const isValid = RDocumentIdentification.isValid(result)
 
   test('should be defined', () => {
     expect(result).toBeDefined()
+  })
+
+  test('should be valid', () => {
+    expect(isValid).toBeTruthy()
   })
 
   test('should return valid value', async () => {

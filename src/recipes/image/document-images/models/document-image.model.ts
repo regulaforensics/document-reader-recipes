@@ -1,5 +1,5 @@
 import { plainToClass, Type } from 'class-transformer'
-import { IsDefined, IsEnum, IsString, ValidateNested, validateSync } from 'class-validator'
+import { IsDefined, IsEnum, IsString, ValidateNested, validateSync, ValidationError } from 'class-validator'
 import { eGraphicFieldType, eLights } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
@@ -80,19 +80,19 @@ export class RDocumentImage implements iRDocumentImage {
   static fromPlain = (input: AllowPrimitives<iRDocumentImage>): RDocumentImage => plainToClass(RDocumentImage, input)
 
   /**
+  * Gets validation errors of RDocumentImage
+  * @param {RDocumentImage} input - input data
+  * @returns {ValidationError[]} - array of validation errors
+  */
+  static getValidationErrors = (input: RDocumentImage): ValidationError[] => validateSync(input)
+
+  /**
   * Check if RDocumentImage is valid
-  * @param {RDocumentImage} input - RDocumentImage object
+  * @param {RDocumentImage|RDocumentImage[]} input - input data
   * @returns {boolean}
   */
-  static isValid = (input: RDocumentImage): boolean => {
-    const errors = validateSync(input)
-
-    if (errors.length) {
-      console.error(errors)
-
-      return false
-    }
-
-    return true
+  static isValid = (input: RDocumentImage | RDocumentImage[]): boolean => {
+    const items = Array.isArray(input) ? input : [input]
+    return items.every((item) => !RDocumentImage.getValidationErrors(item).length)
   }
 }

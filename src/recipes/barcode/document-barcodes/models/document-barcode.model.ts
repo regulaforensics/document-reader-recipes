@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, ValidateNested, validateSync } from 'class-validator'
+import { IsDefined, IsNumber, ValidateNested, validateSync, ValidationError } from 'class-validator'
 import { plainToClass, Type } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
@@ -51,25 +51,20 @@ export class RDocumentBarcode implements iRDocumentBarcode {
   static fromPlain = (input: AllowPrimitives<iRDocumentBarcode>): RDocumentBarcode => plainToClass(RDocumentBarcode, input)
 
   /**
-  * Validates input data
+  * Gets validation errors of RDocumentBarcode
   * @param {RDocumentBarcode} input - input data
-  * @returns {boolean} - true if input data is valid
+  * @returns {ValidationError[]} - array of validation errors
   */
-  static isValid = (input: RDocumentBarcode): boolean => {
-    const errors = validateSync(input)
-
-    if (errors.length) {
-      console.error('RDocumentBarcode validation errors:', errors)
-      return false
-    }
-
-    return true
-  }
+  static getValidationErrors = (input: RDocumentBarcode): ValidationError[] => validateSync(input)
 
   /**
-  * Validates array of RDocumentBarcode
-  * @param {RDocumentBarcode[]} input - input data
+  * Validates RDocumentBarcode
+  * @param {RDocumentBarcode[] | RDocumentBarcode} input - input data
   * @returns {boolean} - true if input data is valid
   */
-  static isAllValid = (input: RDocumentBarcode[]): boolean => input.every(RDocumentBarcode.isValid)
+  static isValid = (input: RDocumentBarcode[] | RDocumentBarcode): boolean => {
+    const items = Array.isArray(input) ? input : [input]
+
+    return items.every(item => RDocumentBarcode.getValidationErrors(item).length === 0)
+  }
 }
