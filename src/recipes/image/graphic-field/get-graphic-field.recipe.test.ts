@@ -1,14 +1,17 @@
 import { eGraphicFieldType, eLights, ProcessResponse } from '@regulaforensics/document-reader-typings'
 
 import rawDocReaderResponse from '@/test-data/0.json'
+import { RGraphicField } from './models'
 import { getGraphicField } from './get-graphic-field.recipe'
 
 
-describe('getGraphicField', async () => {
+describe('getGraphicField', () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
-  const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
+  let result: RGraphicField
 
   test('should be defined', async () => {
+    result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
+
     expect(result).toBeDefined()
   })
 
@@ -26,5 +29,11 @@ describe('getGraphicField', async () => {
     const result = await getGraphicField(docReaderResponse, eGraphicFieldType.PORTRAIT, eLights.HOLO, false)
 
     expect(result).toBeUndefined()
+  })
+
+  test('should return valid model', async () => {
+    const isValid = RGraphicField.isValid(result)
+
+    expect(isValid).toBe(true)
   })
 })

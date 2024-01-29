@@ -12,23 +12,49 @@ import { RGraphicField } from './models'
 const DEFAULT_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAoMBgDTD2qgAAAAASUVORK5CYII='
 
 
+/**
+* Get graphic field
+* @param {ProcessResponse} input - DocumentReader response
+* @param {eGraphicFieldType} fieldType - Field type
+* @param {true} allowDefaultImage - Allow default image if no image found
+* @param {eLights[]} lights - Light indexes
+* @returns {Promise<RGraphicField}
+*/
 export async function getGraphicField(
   input: ProcessResponse,
   fieldType: eGraphicFieldType,
-  light?: eLights,
-  allowDefaultImage?: true
+  allowDefaultImage?: true,
+  lights?: eLights[],
 ): Promise<RGraphicField>
+
+/**
+* Get graphic field
+* @param {ProcessResponse} input - DocumentReader response
+* @param {eGraphicFieldType} fieldType - Field type
+* @param {false} allowDefaultImage - Allow default image if no image found
+* @param {eLights[]} lights - Light indexes
+* @returns {Promise<RGraphicField | undefined>}
+*/
 export async function getGraphicField(
   input: ProcessResponse,
   fieldType: eGraphicFieldType,
-  light?: eLights,
-  allowDefaultImage?: false
+  allowDefaultImage?: false,
+  lights?: eLights[],
 ): Promise<RGraphicField | undefined>
+
+/**
+* Get graphic field
+* @param {ProcessResponse} input - DocumentReader response
+* @param {eGraphicFieldType} fieldType - Field type
+* @param {boolean} allowDefaultImage - Allow default image if no image found
+* @param {eLights[]} lights - Light indexes
+* @returns {Promise<RGraphicField | undefined>}
+*/
 export async function getGraphicField(
   input: ProcessResponse,
   fieldType: eGraphicFieldType,
-  light: eLights = eLights.WHITE_FULL,
-  allowDefaultImage: boolean = true
+  allowDefaultImage: boolean = true,
+  lights?: eLights[],
 ): Promise<RGraphicField | undefined> {
   const result = new RGraphicField()
   result.width = 1
@@ -58,7 +84,7 @@ export async function getGraphicField(
       for (let j = 0; j < current.valueList.length; j++) {
         const image = current.valueList[j]
 
-        if (image.lightIndex === light) {
+        if ((lights && lights.includes(image.lightIndex)) || (!lights)) {
           candidate = image.value
 
           break

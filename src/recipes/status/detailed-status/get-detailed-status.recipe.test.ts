@@ -1,16 +1,21 @@
-import { eCheckResult, ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { ProcessResponse } from '@regulaforensics/document-reader-typings'
 
 import rawDocReaderResponse from '@/test-data/0.json'
-import { eOpticalStatusField } from './models'
 import { getDetailedStatus } from './get-detailed-status.recipe'
+import { eOpticalStatusField, RDetailedStatus } from './models'
 
 
 describe('getDetailedStatus', () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
   const result = getDetailedStatus(docReaderResponse)
+  const isValid = RDetailedStatus.isValid(result)
 
   test('should be defined', () => {
     expect(result).toBeDefined()
+  })
+
+  test('should be valid', () => {
+    expect(isValid).toBe(true)
   })
 
   test('should return DOC_TYPE status', () => {

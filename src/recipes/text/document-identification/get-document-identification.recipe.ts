@@ -3,16 +3,39 @@ import { OneCandidateContainer, ProcessResponse } from '@regulaforensics/documen
 import { RDocumentIdentification } from './models'
 
 
+/**
+* Returns document identification from process response
+* @param {ProcessResponse} input
+* @param {false} allowDefault
+* @param {string|undefined} defaultDocumentName
+* @returns {RDocumentIdentification}
+*/
 export function getDocumentIdentification(
   input: ProcessResponse,
   allowDefault?: false,
   defaultDocumentName?: string
 ): RDocumentIdentification;
+
+/**
+* Returns document identification from process response
+* @param {ProcessResponse} input
+* @param {true} allowDefault
+* @param {string|undefined} defaultDocumentName
+* @returns {RDocumentIdentification | undefined}
+*/
 export function getDocumentIdentification(
   input: ProcessResponse,
   allowDefault?: true,
   defaultDocumentName?: string
 ): RDocumentIdentification | undefined;
+
+/**
+* Returns document identification from process response
+* @param {ProcessResponse} input
+* @param {boolean} allowDefault
+* @param {string|undefined} defaultDocumentName
+* @returns {RDocumentIdentification | undefined}
+*/
 export function getDocumentIdentification(
   input: ProcessResponse,
   allowDefault: boolean = false,

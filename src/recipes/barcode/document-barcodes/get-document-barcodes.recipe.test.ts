@@ -8,7 +8,7 @@ import { getDocumentBarcodes } from './get-document-barcodes.recipe'
 describe('getDocumentBarcodes', () => {
   const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
   const result = getDocumentBarcodes(docReaderResponse)
-  const isValid = RDocumentBarcode.isAllValid(result)
+  const isValid = RDocumentBarcode.isValid(result)
 
   test('should return non-empty array of images', () => {
     expect(result.length).toBeGreaterThan(0)

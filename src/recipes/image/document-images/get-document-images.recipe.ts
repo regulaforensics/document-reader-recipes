@@ -9,6 +9,12 @@ import { getImageDimensions } from '@/helpers'
 import { RDocumentImage, RDocumentImagePage } from './models'
 
 
+/**
+* Get document images
+* @param {ProcessResponse} input
+* @param {eGraphicFieldType[]|undefined} fieldTypes
+* @returns {Promise<RDocumentImage[]>}
+*/
 export const getDocumentImages = async (
   input: ProcessResponse,
   fieldTypes?: eGraphicFieldType[]

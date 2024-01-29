@@ -1,4 +1,4 @@
-import { IsDefined, IsInt, IsString, validateSync } from 'class-validator'
+import { IsDefined, IsInt, IsString, validateSync, ValidationError } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
@@ -63,19 +63,19 @@ export class RGraphicField implements iRGraphicField {
   static fromPlain = (input: AllowPrimitives<iRGraphicField>): RGraphicField => plainToClass(RGraphicField, input)
 
   /**
-  * Check if RGraphicField is valid
+  * Get validation errors of RGraphicField
   * @param {RGraphicField} input - RGraphicField object
+  * @returns {ValidationError[]}
+  */
+  static getValidationErrors = (input: RGraphicField): ValidationError[] => validateSync(input)
+
+  /**
+  * Check if RGraphicField is valid
+  * @param {RGraphicField | RGraphicField[]} input - RGraphicField object or array of RGraphicField objects
   * @returns {boolean}
   */
-  static isValid = (input: RGraphicField): boolean => {
-    const errors = validateSync(input)
-
-    if (errors.length) {
-      console.error(errors)
-
-      return false
-    }
-
-    return true
+  static isValid = (input: RGraphicField | RGraphicField[]): boolean => {
+    const objects = Array.isArray(input) ? input : [input]
+    return objects.every((item) => RGraphicField.getValidationErrors(item).length === 0)
   }
 }
