@@ -34,6 +34,9 @@ export const getTextData = (input: ProcessResponse): RTextData[] => {
           currentSource.checkResult = validity.status
           currentSource.source = source
           currentSource.value = currentSourceValue?.value || ''
+          currentSource.pageIndex = currentSourceValue?.pageIndex || 0
+          currentSource.probability = currentSourceValue?.probability || 0
+
 
           current.bySource.push(currentSource)
         }

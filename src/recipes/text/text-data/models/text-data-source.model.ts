@@ -25,6 +25,18 @@ export interface iRTextDataSource {
   * @type {string}
   */
   value: string
+
+  /**
+  * Field recognition probability
+  * @type {number}
+  */
+  probability: number;
+
+  /**
+  * Page index
+  * @type {number}
+  */
+  pageIndex: number;
 }
 
 /**
@@ -55,4 +67,20 @@ export class RTextDataSource implements iRTextDataSource {
   @IsString()
   @Default('')
   value: string
+
+  /**
+  * Field recognition probability
+  * @type {number}
+  */
+  @IsDefined()
+  @Default(0)
+  probability: number;
+
+  /**
+  * Page index
+  * @type {number}
+  */
+  @IsDefined()
+  @Default(0)
+  pageIndex: number;
 }
