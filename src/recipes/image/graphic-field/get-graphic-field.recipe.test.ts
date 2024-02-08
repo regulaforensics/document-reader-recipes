@@ -20,13 +20,13 @@ describe('getGraphicField', () => {
   })
 
   test('should be able to return default image', async () => {
-    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT, eLights.HOLO)
+    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT, true, [eLights.HOLO])
 
     expect(result.src).toMatch(/^data:image\/png;base64/)
   })
 
   test('should return undefined if no image found', async () => {
-    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.PORTRAIT, eLights.HOLO, false)
+    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.PORTRAIT, false, [eLights.HOLO])
 
     expect(result).toBeUndefined()
   })
