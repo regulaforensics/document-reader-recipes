@@ -21,7 +21,7 @@ export const getDocumentImages = async (
 ): Promise<RDocumentImage[]> => {
   const result: RDocumentImage[] = []
 
-  const containers = ImagesResultContainer.fromProcessResponse(input)
+  const containers = ImagesResultContainer.fromProcessResponse(input, false)
 
   if (!containers.length) {
     return result

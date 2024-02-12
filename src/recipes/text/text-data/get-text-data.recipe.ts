@@ -5,7 +5,7 @@ import { RTextData, RTextDataSource } from './models'
 
 export const getTextData = (input: ProcessResponse): RTextData[] => {
   const result: RTextData[] = []
-  const containers = TextResultContainer.fromProcessResponse(input)
+  const containers = TextResultContainer.fromProcessResponse(input, false)
 
   if (!containers.length) {
     return result
