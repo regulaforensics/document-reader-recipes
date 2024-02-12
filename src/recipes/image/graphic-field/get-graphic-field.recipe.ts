@@ -61,7 +61,7 @@ export async function getGraphicField(
   result.height = 1
   result.src = DEFAULT_IMAGE
 
-  const containers = ImagesResultContainer.fromProcessResponse(input)
+  const containers = ImagesResultContainer.fromProcessResponse(input, false)
 
   if (!containers.length) {
     return allowDefaultImage ? result : undefined

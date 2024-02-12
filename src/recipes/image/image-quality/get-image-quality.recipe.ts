@@ -12,7 +12,7 @@ import { RImageQuality, RImageQualityCheck } from './models'
 export const getImageQuality = (input: ProcessResponse): RImageQuality[] => {
   const result: RImageQuality[] = []
 
-  const containers = ImageQualityCheckListContainer.fromProcessResponse(input)
+  const containers = ImageQualityCheckListContainer.fromProcessResponse(input, false)
     .sort(firstBy((i) => i.page_idx))
 
   containers.forEach((container) => {

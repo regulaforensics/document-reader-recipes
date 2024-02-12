@@ -22,7 +22,7 @@ const SCORE_SHIFT = 3
 export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'UNKNOWN'): RNameSurname => {
   const result: RNameSurname = new RNameSurname()
 
-  const containers = TextResultContainer.fromProcessResponse(input)
+  const containers = TextResultContainer.fromProcessResponse(input, false)
 
   if (!containers.length) {
     return RNameSurname.fromPlain({
