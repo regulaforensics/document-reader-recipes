@@ -1,5 +1,5 @@
 {
-  "version": "0.0.20",
+  "version": "0.0.21",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
@@ -24,7 +24,7 @@
     "vite-plugin-dts": "^3.7.2"
   },
   "peerDependencies": {
-    "@regulaforensics/document-reader-typings": "^0.0.10"
+    "@regulaforensics/document-reader-typings": ">=0.0.10"
   },
   "source": "src/index.ts",
   "main": "dist/index.cjs",
