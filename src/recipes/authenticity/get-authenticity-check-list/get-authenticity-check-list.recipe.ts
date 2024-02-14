@@ -1,16 +1,21 @@
 import {
   AuthenticityCheckListContainer,
-  AuthenticityFibersTypeCheckResult,
   AuthenticityIdentCheckResult,
   AuthenticityPhotoIdentCheckResult,
   AuthenticitySecurityFeatureCheckResult,
+  eAuthenticity,
   eCheckDiagnose,
   eCheckResult,
-  eResultType,
+  eSecurityFeatureType,
   ProcessResponse
 } from '@regulaforensics/document-reader-typings'
 
-import { RAuthenticityCheckListItem, RAuthenticityImageCheckListItem } from './models'
+import {
+  RAuthenticityBarcodeCheckListItem,
+  RAuthenticityCheckListItem,
+  RAuthenticityImageCheckListItem,
+  RAuthenticityIpiCheckListItem
+} from './models'
 
 
 export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckListItem[] => {
@@ -18,21 +23,22 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
   const result: RAuthenticityCheckListItem[] = []
 
   containers.forEach((container) => {
-    const isComparison = [eResultType.FINGER_PRINT_COMPARISON, eResultType.PORTRAIT_COMPARISON]
-      .includes(container.result_type)
-
     const list = container.AuthenticityCheckList.List
     const current = RAuthenticityCheckListItem.fromPlain({
       page: container.page_idx || 1,
-      images: []
+      images: [],
+      ipi: [],
+      barcode: [],
     })
 
     list.forEach((item) => {
+      /*
       if (AuthenticityFibersTypeCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
 
         })
       }
+      */
 
       if (AuthenticityIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
@@ -47,21 +53,37 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
         })
       }
 
-      /*if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
+      /*
+      if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
 
         })
-      }*/
+      }
+      */
 
       if (AuthenticityPhotoIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-
+          if (subItem.Type === eAuthenticity.IPI) {
+            if (subItem.ResultImages?.Images?.length) {
+              current.ipi.push(RAuthenticityIpiCheckListItem.fromPlain({
+                checkResult: subItem.ElementResult || eCheckResult.WAS_NOT_DONE,
+                diagnose: subItem.ElementDiagnose || eCheckDiagnose.UNKNOWN,
+                image: subItem.ResultImages.Images[0].image,
+              }))
+            }
+          }
         })
       }
 
       if (AuthenticitySecurityFeatureCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-
+          if (subItem.Type === eAuthenticity.BARCODE_FORMAT_CHECK) {
+            current.barcode.push(RAuthenticityBarcodeCheckListItem.fromPlain({
+              checkResult: subItem.ElementResult || eCheckResult.WAS_NOT_DONE,
+              diagnose: subItem.ElementDiagnose || eCheckDiagnose.UNKNOWN,
+              feature: subItem.ElementType || eSecurityFeatureType.BLANK,
+            }))
+          }
         })
       }
 
@@ -70,5 +92,5 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
     result.push(current)
   })
 
-  return result.filter((item) => item.images.length > 0)
+  return result.filter((item) => item.images.length > 0 || item.ipi.length > 0 || item.barcode.length > 0)
 }

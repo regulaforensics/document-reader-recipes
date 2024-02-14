@@ -2,7 +2,13 @@ import { plainToClass, Type } from 'class-transformer'
 import { IsDefined, IsInt, ValidateNested, validateSync, ValidationError } from 'class-validator'
 
 import { AllowPrimitives } from '@/types'
-import { iRAuthenticityImageCheckListItem, RAuthenticityImageCheckListItem } from './children'
+import {
+  iRAuthenticityBarcodeCheckListItem,
+  iRAuthenticityImageCheckListItem,
+  iRAuthenticityIpiCheckListItem, RAuthenticityBarcodeCheckListItem,
+  RAuthenticityImageCheckListItem,
+  RAuthenticityIpiCheckListItem
+} from './children'
 
 
 /**
@@ -20,6 +26,18 @@ export interface iRAuthenticityCheckListItem {
   * @type {iRAuthenticityImageCheckListItem[]}
   */
   images: iRAuthenticityImageCheckListItem[]
+
+  /**
+  * IPI
+  * @type {iRAuthenticityIpiCheckListItem[]}
+  */
+  ipi: iRAuthenticityIpiCheckListItem[]
+
+  /**
+  * Barcode
+  * @type {iRAuthenticityBarcodeCheckListItem[]}
+  */
+  barcode: iRAuthenticityBarcodeCheckListItem[]
 }
 
 /**
@@ -42,6 +60,24 @@ export class RAuthenticityCheckListItem implements iRAuthenticityCheckListItem {
   @ValidateNested({ each: true })
   @Type(() => RAuthenticityImageCheckListItem)
   images: RAuthenticityImageCheckListItem[]
+
+  /**
+  * IPI
+  * @type {RAuthenticityIpiCheckListItem[]}
+  */
+  @IsDefined()
+  @ValidateNested({ each: true })
+  @Type(() => RAuthenticityIpiCheckListItem)
+  ipi: RAuthenticityIpiCheckListItem[]
+
+  /**
+  * Barcode
+  * @type {RAuthenticityBarcodeCheckListItem[]}
+  */
+  @IsDefined()
+  @ValidateNested({ each: true })
+  @Type(() => RAuthenticityBarcodeCheckListItem)
+  barcode: RAuthenticityBarcodeCheckListItem[]
 
   /**
   * Create instance of RAuthenticityCheckListItem from plain object
