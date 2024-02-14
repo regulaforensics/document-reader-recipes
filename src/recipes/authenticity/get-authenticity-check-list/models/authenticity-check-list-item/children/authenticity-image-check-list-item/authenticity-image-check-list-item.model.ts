@@ -46,7 +46,7 @@ export interface iRAuthenticityImageCheckListItem {
 }
 
 /**
- * Authenticity image check list item
+* Authenticity image check list item
 */
 export class RAuthenticityImageCheckListItem implements iRAuthenticityImageCheckListItem {
   /**

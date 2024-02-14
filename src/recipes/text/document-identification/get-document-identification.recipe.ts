@@ -8,26 +8,26 @@ import { RDocumentIdentification } from './models'
 * @param {ProcessResponse} input
 * @param {false} allowDefault
 * @param {string|undefined} defaultDocumentName
-* @returns {RDocumentIdentification}
+* @returns {RDocumentIdentification|undefined}
 */
 export function getDocumentIdentification(
   input: ProcessResponse,
   allowDefault?: false,
   defaultDocumentName?: string
-): RDocumentIdentification;
+): RDocumentIdentification | undefined;
 
 /**
 * Returns document identification from process response
 * @param {ProcessResponse} input
 * @param {true} allowDefault
 * @param {string|undefined} defaultDocumentName
-* @returns {RDocumentIdentification | undefined}
+* @returns {RDocumentIdentification}
 */
 export function getDocumentIdentification(
   input: ProcessResponse,
   allowDefault?: true,
   defaultDocumentName?: string
-): RDocumentIdentification | undefined;
+): RDocumentIdentification;
 
 /**
 * Returns document identification from process response
