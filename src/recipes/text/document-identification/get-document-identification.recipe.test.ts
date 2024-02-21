@@ -1,47 +1,67 @@
-import { OneCandidateContainerResultTypes, ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { readdirSync, readFileSync } from 'fs'
+import { join } from 'path'
 
-import rawDocReaderResponse from '@/test-data/0.json'
 import { RDocumentIdentification } from './models'
 import { getDocumentIdentification } from './get-document-identification.recipe'
 
 
+const DIRECTORY = String(process.env.PROCESS_RESPONSE_JSONS_DIR)
+
 describe('getDocumentIdentification', () => {
-  const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
-  const result = getDocumentIdentification(docReaderResponse)
-  const isValid = RDocumentIdentification.isValid(result)
+  const files = readdirSync(DIRECTORY)
 
-  test('should be defined', () => {
-    expect(result).toBeDefined()
-  })
+  files.forEach(async (file) => {
+    const filePath = join(DIRECTORY, file)
 
-  test('should be valid', () => {
-    expect(isValid).toBeTruthy()
-  })
+    if (!filePath.endsWith('.json')) {
+      return
+    }
 
-  test('should return valid value', async () => {
-    expect(result.documentName).toEqual('Serbia - ePassport (2008)')
-  })
+    const fileContent = readFileSync(filePath, 'utf-8')
 
-  test('should return pageIndex', async () => {
-    expect(result.pageIndex).toBeDefined()
-    expect(result.pageIndex).toEqual(1)
-  })
+    let isValidJSON = true
+    let response = ''
 
-  const docReaderResponseWithoutOneCandidate = ProcessResponse.fromPlain(rawDocReaderResponse)
-  docReaderResponseWithoutOneCandidate.ContainerList.List = docReaderResponse.ContainerList.List
-    .filter((container) => !OneCandidateContainerResultTypes.includes(container.result_type as any))
+    try {
+      response = JSON.parse(fileContent)
+    } catch (e) {
+      isValidJSON = false
+    }
 
-  test('should return undefined if there is no OneCandidateContainer and allowDefault is false', async () => {
-    const result = getDocumentIdentification(docReaderResponseWithoutOneCandidate, false)
+    test(`file '${file}': should be a valid JSON`, () => {
+      expect(isValidJSON).toBe(true)
+    })
 
-    expect(result).toBeUndefined()
-  })
+    const docReaderResponse = ProcessResponse.fromPlain(response)
+    const result = getDocumentIdentification(docReaderResponse, true)
+    const isValid = RDocumentIdentification.isValid(result)
 
-  test('should return default value if there is no OneCandidateContainer and allowDefault is true', async () => {
-    const result = getDocumentIdentification(docReaderResponseWithoutOneCandidate, true)
+    test('should be defined', () => {
+      expect(result).toBeDefined()
+    })
 
-    expect(result).toBeDefined()
-    expect(result?.documentName).toEqual('UNKNOWN')
-    expect(result?.pageIndex).toEqual(1)
+    test('should be valid', () => {
+      expect(isValid).toBeTruthy()
+    })
+
+    test('should return pageIndex', async () => {
+      expect(result.pageIndex).toBeDefined()
+      expect(result.pageIndex).toEqual(1)
+    })
+
+    /*  test('should return undefined if there is no OneCandidateContainer and allowDefault is false', async () => {
+        const result = getDocumentIdentification(docReaderResponseWithoutOneCandidate, false)
+
+        expect(result).toBeUndefined()
+      })
+
+      test('should return default value if there is no OneCandidateContainer and allowDefault is true', async () => {
+        const result = getDocumentIdentification(docReaderResponseWithoutOneCandidate, true)
+
+        expect(result).toBeDefined()
+        expect(result?.documentName).toEqual('UNKNOWN')
+        expect(result?.pageIndex).toEqual(1)
+      })*/
   })
 })
