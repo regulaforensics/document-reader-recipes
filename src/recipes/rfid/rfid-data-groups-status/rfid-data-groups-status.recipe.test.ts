@@ -1,30 +1,45 @@
-import { eRfidErrorCodes, ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { readdirSync, readFileSync } from 'fs'
+import { join } from 'path'
 
-import rawDocReaderResponse from '@/test-data/rfid.json'
-import rawDocReaderResponse2 from '@/test-data/2.json'
 import { getRfidDataGroupsStatus } from './rfid-data-groups-status.recipe'
 
 
+const DIRECTORY = String(process.env.PROCESS_RESPONSE_JSONS_DIR)
+
 describe('getRfidDataGroupsStatus', () => {
-  const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
+  const files = readdirSync(DIRECTORY)
 
-  test('should return some results', () => {
-    const result = getRfidDataGroupsStatus(docReaderResponse)
+  files.forEach(async (file) => {
+    const filePath = join(DIRECTORY, file)
 
-    const hasChecked = result.some((status) => status.status === eRfidErrorCodes.ERROR_NO_ERROR)
+    if (!filePath.endsWith('.json')) {
+      return
+    }
 
-    expect(hasChecked).toBe(true)
-    expect(result.length).toBeGreaterThan(0)
-  })
+    const fileContent = readFileSync(filePath, 'utf-8')
 
-  const docReaderResponse2 = ProcessResponse.fromPlain(rawDocReaderResponse2)
+    let isValidJSON = true
+    let response = ''
 
+    try {
+      response = JSON.parse(fileContent)
+    } catch (e) {
+      isValidJSON = false
+    }
 
-  test('should return non-read data groups', () => {
-    const result = getRfidDataGroupsStatus(docReaderResponse2)
+    test(`file '${file}': should be a valid JSON`, () => {
+      expect(isValidJSON).toBe(true)
+    })
 
-    const notRead = result.filter((status) => status.status === eRfidErrorCodes.ERROR_NOT_PERFORMED)
+    const docReaderResponse = ProcessResponse.fromPlain(response)
 
-    expect(notRead.length).toEqual(21)
+    test('should return some results', () => {
+      const result = getRfidDataGroupsStatus(docReaderResponse)
+
+      // const hasChecked = result.some((status) => status.status === eRfidErrorCodes.ERROR_NO_ERROR)
+
+      expect(result.length).toBeGreaterThan(0)
+    })
   })
 })

@@ -20,6 +20,7 @@ export const getImageQuality = (input: ProcessResponse): RImageQuality[] => {
 
     current.pageIndex = container.page_idx || 1
     current.checks = []
+    current.checkResult = container.ImageQualityCheckList.result
 
     container.ImageQualityCheckList.List.forEach((check) => {
       if (!check.result || !check.type) {
@@ -27,6 +28,7 @@ export const getImageQuality = (input: ProcessResponse): RImageQuality[] => {
       }
 
       const currentCheck = new RImageQualityCheck()
+
       currentCheck.checkResult = check.result
       currentCheck.checkType = check.type
 

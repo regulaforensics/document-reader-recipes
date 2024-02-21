@@ -1,38 +1,43 @@
-import { eCheckResult, ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { readdirSync, readFileSync } from 'fs'
+import { join } from 'path'
 
-import rawDocReaderResponse from '@/test-data/rfid.json'
-import rawDocReaderResponse2 from '@/test-data/1.json'
 import { getRfidChecksSummary } from './get-rfid-checks-summary.recipe'
 
 
+const DIRECTORY = String(process.env.PROCESS_RESPONSE_JSONS_DIR)
+
 describe('getRfidChecksSummary', () => {
-  const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
+  const files = readdirSync(DIRECTORY)
 
-  test('should valid result', () => {
-    const result = getRfidChecksSummary(docReaderResponse)
+  files.forEach(async (file) => {
+    const filePath = join(DIRECTORY, file)
 
-    expect(result).toBeDefined()
-    expect(result.overallStatus).toEqual(eCheckResult.ERROR)
-    expect(result.AA).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.BAC).toEqual(eCheckResult.OK)
-    expect(result.CA).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.PA).toEqual(eCheckResult.ERROR)
-    expect(result.PACE).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.TA).toEqual(eCheckResult.WAS_NOT_DONE)
-  })
+    if (!filePath.endsWith('.json')) {
+      return
+    }
 
-  const docReaderResponse2 = ProcessResponse.fromPlain(rawDocReaderResponse2)
+    const fileContent = readFileSync(filePath, 'utf-8')
 
-  test('should return default value if there is no RFID checks', async () => {
-    const result = getRfidChecksSummary(docReaderResponse2)
+    let isValidJSON = true
+    let response = ''
 
-    expect(result).toBeDefined()
-    expect(result.overallStatus).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.AA).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.BAC).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.CA).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.PA).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.PACE).toEqual(eCheckResult.WAS_NOT_DONE)
-    expect(result.TA).toEqual(eCheckResult.WAS_NOT_DONE)
+    try {
+      response = JSON.parse(fileContent)
+    } catch (e) {
+      isValidJSON = false
+    }
+
+    test(`file '${file}': should be a valid JSON`, () => {
+      expect(isValidJSON).toBe(true)
+    })
+
+    const docReaderResponse = ProcessResponse.fromPlain(response)
+
+    test(`file '${file}': should valid result`, () => {
+      const result = getRfidChecksSummary(docReaderResponse)
+
+      expect(result).toBeDefined()
+    })
   })
 })

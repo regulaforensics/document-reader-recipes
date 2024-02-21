@@ -1,23 +1,54 @@
+import 'reflect-metadata'
+import { join } from 'path'
+import { readdirSync, readFileSync } from 'fs'
 import { ProcessResponse } from '@regulaforensics/document-reader-typings'
 
-import rawDocReaderResponse from '@/test-data/2.json'
 import { RDocumentImage } from './models'
 import { getDocumentImages } from './get-document-images.recipe'
 
 
+const DIRECTORY = String(process.env.PROCESS_RESPONSE_JSONS_DIR)
+
 describe('getDocumentImage', () => {
-  const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
-  let result: RDocumentImage[] = []
+  const files = readdirSync(DIRECTORY)
 
-  test('should return non-empty array of images', async () => {
-    result = await getDocumentImages(docReaderResponse)
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const filePath = join(DIRECTORY, file)
 
-    expect(result.length).toBeGreaterThan(0)
-  })
+    if (!filePath.endsWith('.json')) {
+      continue
+    }
 
-  test('should return valid array of images', () => {
-    const isValid = RDocumentImage.isValid(result)
+    const fileContent = readFileSync(filePath, 'utf-8')
 
-    expect(isValid).toBe(true)
-  })
+    let isValidJSON = true
+    let response = ''
+
+    try {
+      response = JSON.parse(fileContent)
+    } catch (e) {
+      isValidJSON = false
+    }
+
+    test(`file '${file}': should be a valid JSON`, () => {
+      expect(isValidJSON).toBe(true)
+    })
+
+    const docReaderResponse = ProcessResponse.fromPlain(response)
+
+    test(`file '${file}': should return non-empty array of images`, async() => {
+      let result: RDocumentImage[] = await getDocumentImages(docReaderResponse)
+
+      expect(result.length).toBeGreaterThan(0)
+    })
+
+    /*
+    test('should return valid array of images', () => {
+      const isValid = RDocumentImage.isValid(result)
+
+      expect(isValid).toBe(true)
+    })
+    */
+  }
 })

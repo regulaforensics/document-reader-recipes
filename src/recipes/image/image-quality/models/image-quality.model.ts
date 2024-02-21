@@ -1,8 +1,9 @@
-import { IsDefined, IsNumber, ValidateNested, validateSync, ValidationError } from 'class-validator'
+import { IsDefined, IsEnum, IsNumber, ValidateNested, validateSync, ValidationError } from 'class-validator'
 import { plainToClass, Type } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
 import { iRImageQualityCheck, RImageQualityCheck } from './image-quality-check.model'
+import { eCheckResult } from '@regulaforensics/document-reader-typings'
 
 
 /**
@@ -14,6 +15,12 @@ export interface iRImageQuality {
   * @type {number}
   */
   pageIndex: number
+
+  /**
+  * Check result
+  * @type {eCheckResult}
+  */
+  checkResult: eCheckResult
 
   /**
   * Array of single check result pointers
@@ -33,6 +40,14 @@ export class RImageQuality implements iRImageQuality {
   @IsDefined()
   @IsNumber()
   pageIndex: number
+
+  /**
+  * Check result
+  * @type {eCheckResult}
+  */
+  @IsDefined()
+  @IsEnum(eCheckResult)
+  checkResult: eCheckResult
 
   /**
   * Array of single check result pointers

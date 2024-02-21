@@ -1,48 +1,76 @@
 import { ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { readdirSync, readFileSync } from 'fs'
+import { join } from 'path'
 
-import rawDocReaderResponse from '@/test-data/0.json'
-import { getDetailedStatus } from './get-detailed-status.recipe'
 import { eOpticalStatusField, RDetailedStatus } from './models'
+import { getDetailedStatus } from './get-detailed-status.recipe'
 
+
+const DIRECTORY = String(process.env.PROCESS_RESPONSE_JSONS_DIR)
 
 describe('getDetailedStatus', () => {
-  const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
-  const result = getDetailedStatus(docReaderResponse)
-  const isValid = RDetailedStatus.isValid(result)
+  const files = readdirSync(DIRECTORY)
 
-  test('should be defined', () => {
-    expect(result).toBeDefined()
-  })
+  files.forEach(async (file) => {
+    const filePath = join(DIRECTORY, file)
 
-  test('should be valid', () => {
-    expect(isValid).toBe(true)
-  })
+    if (!filePath.endsWith('.json')) {
+      return
+    }
 
-  test('should return DOC_TYPE status', () => {
-    expect(result.optical[eOpticalStatusField.DOC_TYPE]).toBeDefined()
-  })
+    const fileContent = readFileSync(filePath, 'utf-8')
 
-  test('should return OVERALL status', () => {
-    expect(result.optical[eOpticalStatusField.OVERALL]).toBeDefined()
-  })
+    let isValidJSON = true
+    let response = ''
 
-  test('should return TEXT status', () => {
-    expect(result.optical[eOpticalStatusField.TEXT]).toBeDefined()
-  })
+    try {
+      response = JSON.parse(fileContent)
+    } catch (e) {
+      isValidJSON = false
+    }
 
-  test('should return SECURITY status', () => {
-    expect(result.optical[eOpticalStatusField.SECURITY]).toBeDefined()
-  })
+    test(`file '${file}': should be a valid JSON`, () => {
+      expect(isValidJSON).toBe(true)
+    })
 
-  test('should return MRZ status', () => {
-    expect(result.optical[eOpticalStatusField.MRZ]).toBeDefined()
-  })
+    const docReaderResponse = ProcessResponse.fromPlain(response)
+    const result = getDetailedStatus(docReaderResponse)
+    const isValid = RDetailedStatus.isValid(result)
 
-  test('should return IMAGE_QA status', () => {
-    expect(result.optical[eOpticalStatusField.IMAGE_QA]).toBeDefined()
-  })
+    test('should be defined', () => {
+      expect(result).toBeDefined()
+    })
 
-  test('should return EXPIRY status', () => {
-    expect(result.optical[eOpticalStatusField.EXPIRY]).toBeDefined()
+    test('should be valid', () => {
+      expect(isValid).toBe(true)
+    })
+
+    test('should return DOC_TYPE status', () => {
+      expect(result.optical[eOpticalStatusField.DOC_TYPE]).toBeDefined()
+    })
+
+    test('should return OVERALL status', () => {
+      expect(result.optical[eOpticalStatusField.OVERALL]).toBeDefined()
+    })
+
+    test('should return TEXT status', () => {
+      expect(result.optical[eOpticalStatusField.TEXT]).toBeDefined()
+    })
+
+    test('should return SECURITY status', () => {
+      expect(result.optical[eOpticalStatusField.SECURITY]).toBeDefined()
+    })
+
+    test('should return MRZ status', () => {
+      expect(result.optical[eOpticalStatusField.MRZ]).toBeDefined()
+    })
+
+    test('should return IMAGE_QA status', () => {
+      expect(result.optical[eOpticalStatusField.IMAGE_QA]).toBeDefined()
+    })
+
+    test('should return EXPIRY status', () => {
+      expect(result.optical[eOpticalStatusField.EXPIRY]).toBeDefined()
+    })
   })
 })

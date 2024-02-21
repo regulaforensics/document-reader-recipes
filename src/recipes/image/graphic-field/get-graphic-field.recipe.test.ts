@@ -1,39 +1,68 @@
 import { eGraphicFieldType, eLights, ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { readdirSync, readFileSync } from 'fs'
+import { join } from 'path'
 
-import rawDocReaderResponse from '@/test-data/0.json'
 import { RGraphicField } from './models'
 import { getGraphicField } from './get-graphic-field.recipe'
 
 
+const DIRECTORY = String(process.env.PROCESS_RESPONSE_JSONS_DIR)
+
 describe('getGraphicField', () => {
-  const docReaderResponse = ProcessResponse.fromPlain(rawDocReaderResponse)
-  let result: RGraphicField
+  const files = readdirSync(DIRECTORY)
 
-  test('should be defined', async () => {
-    result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
+  files.forEach(async (file) => {
+    const filePath = join(DIRECTORY, file)
 
-    expect(result).toBeDefined()
-  })
+    if (!filePath.endsWith('.json')) {
+      return
+    }
 
-  test('should return valid image', async () => {
-    expect(result.src).toMatch(/^data:image\/jpeg;base64/)
-  })
+    const fileContent = readFileSync(filePath, 'utf-8')
 
-  test('should be able to return default image', async () => {
-    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT, true, [eLights.HOLO])
+    let isValidJSON = true
+    let response = ''
 
-    expect(result.src).toMatch(/^data:image\/png;base64/)
-  })
+    try {
+      response = JSON.parse(fileContent)
+    } catch (e) {
+      isValidJSON = false
+    }
 
-  test('should return undefined if no image found', async () => {
-    const result = await getGraphicField(docReaderResponse, eGraphicFieldType.PORTRAIT, false, [eLights.HOLO])
+    test(`file '${file}': should be a valid JSON`, () => {
+      expect(isValidJSON).toBe(true)
+    })
 
-    expect(result).toBeUndefined()
-  })
+    const docReaderResponse = ProcessResponse.fromPlain(response)
 
-  test('should return valid model', async () => {
-    const isValid = RGraphicField.isValid(result)
+    let result: RGraphicField
 
-    expect(isValid).toBe(true)
+    test(`file '${file}': should be defined`, async () => {
+      result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
+
+      expect(result).toBeDefined()
+    })
+
+    test(`file '${file}': should return valid image`, async () => {
+      expect(result.src).toMatch(/^data:image\/jpeg;base64/)
+    })
+
+    test(`file '${file}': should be able to return default image`, async () => {
+      const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT, true, [eLights.HOLO])
+
+      expect(result.src).toMatch(/^data:image\/png;base64/)
+    })
+
+    test(`file '${file}': should return undefined if no image found`, async () => {
+      const result = await getGraphicField(docReaderResponse, eGraphicFieldType.PORTRAIT, false, [eLights.HOLO])
+
+      expect(result).toBeUndefined()
+    })
+
+    test(`file '${file}': should return valid model`, async () => {
+      const isValid = RGraphicField.isValid(result)
+
+      expect(isValid).toBe(true)
+    })
   })
 })

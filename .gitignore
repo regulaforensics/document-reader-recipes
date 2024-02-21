@@ -1,8 +1,8 @@
 .idea
 docs
+testdata
 
 .env
-tests/test-data/
 
 # Logs
 logs
@@ -134,3 +134,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+/test-data/
