@@ -1,11 +1,13 @@
 import { plainToClass, Type } from 'class-transformer'
-import { IsDefined, IsInt, ValidateNested, validateSync, ValidationError } from 'class-validator'
+import { IsDefined, IsEnum, IsInt, ValidateNested, validateSync, ValidationError } from 'class-validator'
+import { eCheckResult } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
 import {
   iRAuthenticityBarcodeCheckListItem,
   iRAuthenticityImageCheckListItem,
-  iRAuthenticityIpiCheckListItem, RAuthenticityBarcodeCheckListItem,
+  iRAuthenticityIpiCheckListItem,
+  RAuthenticityBarcodeCheckListItem,
   RAuthenticityImageCheckListItem,
   RAuthenticityIpiCheckListItem
 } from './children'
@@ -20,6 +22,12 @@ export interface iRAuthenticityCheckListItem {
   * @type {number}
   */
   page: number
+
+  /**
+  * Check result
+  * @type {eCheckResult}
+  */
+  checkResult: eCheckResult
 
   /**
   * Images check list
@@ -51,6 +59,14 @@ export class RAuthenticityCheckListItem implements iRAuthenticityCheckListItem {
   @IsDefined()
   @IsInt()
   page: number
+
+  /**
+  * Check result
+  * @type {eCheckResult}
+  */
+  @IsDefined()
+  @IsEnum(eCheckResult)
+  checkResult: eCheckResult
 
   /**
   * Images check list
