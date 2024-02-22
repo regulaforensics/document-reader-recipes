@@ -10,7 +10,7 @@ import { RRfidCertificatesData } from './models'
 * @returns {RRfidCertificatesData}
 */
 export const getRfidCertificatesData = (input: ProcessResponse, defaultValue: string = 'UNKNOWN'): RRfidCertificatesData => {
-  const binary = DocBinaryInfoContainer.fromProcessResponse(input, false)
+  const binary = DocBinaryInfoContainer.fromProcessResponse(input)
   const result = new RRfidCertificatesData()
 
   result.publicKeyAlgorithm = defaultValue

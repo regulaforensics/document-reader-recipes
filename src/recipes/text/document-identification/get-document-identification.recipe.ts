@@ -41,7 +41,7 @@ export function getDocumentIdentification(
   allowDefault: boolean = false,
   defaultDocumentName: string = 'UNKNOWN'
 ): RDocumentIdentification | undefined {
-  const containers = OneCandidateContainer.fromProcessResponse(input, false)
+  const containers = OneCandidateContainer.fromProcessResponse(input)
 
   for (let i = 0; i < containers.length; i++) {
     const container = containers[i]

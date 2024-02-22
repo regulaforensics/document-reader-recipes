@@ -7,7 +7,7 @@ import { DetailsRFID, eCheckResult, ProcessResponse, StatusContainer } from '@re
 * @returns {DetailsRFID}
 */
 export const getRfidChecksSummary = (input: ProcessResponse): DetailsRFID => {
-  const status = StatusContainer.fromProcessResponse(input, false)
+  const status = StatusContainer.fromProcessResponse(input)
   const candidates: DetailsRFID[] = []
 
   status.forEach((container) => {

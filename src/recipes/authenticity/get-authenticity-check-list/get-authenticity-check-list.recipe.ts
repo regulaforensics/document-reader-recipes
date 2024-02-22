@@ -20,7 +20,7 @@ import {
 
 
 export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckListItem[] => {
-  const containers = AuthenticityCheckListContainer.fromProcessResponse(input, false)
+  const containers = AuthenticityCheckListContainer.fromProcessResponse(input)
   const statutes = StatusContainer.fromProcessResponse(input)
   const result: RAuthenticityCheckListItem[] = []
 

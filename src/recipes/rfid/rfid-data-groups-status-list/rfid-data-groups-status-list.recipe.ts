@@ -13,7 +13,7 @@ import { RRfidDataGroupStatusItem } from './models'
 * @returns {RRfidDataGroupStatusItem[]}
 */
 export const getRfidDataGroupsStatusList = (input: ProcessResponse): RRfidDataGroupStatusItem[] => {
-  const binary = DocBinaryInfoContainer.fromProcessResponse(input, false)
+  const binary = DocBinaryInfoContainer.fromProcessResponse(input)
 
   const result: RRfidDataGroupStatusItem[] = []
 

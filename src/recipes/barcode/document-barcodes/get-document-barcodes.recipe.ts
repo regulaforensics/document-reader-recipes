@@ -16,7 +16,7 @@ import { RDocumentBarcode, RDocumentBarcodeField, RDocumentBarcodeModuleData } f
 export const getDocumentBarcodes = (input: ProcessResponse): RDocumentBarcode[] => {
   const result: RDocumentBarcode[] = []
 
-  const containers = DocBarCodeInfoContainer.fromProcessResponse(input, false)
+  const containers = DocBarCodeInfoContainer.fromProcessResponse(input)
 
   containers.forEach((container) => {
     if (!container.DocBarCodeInfo?.pArrayFields?.length) {
