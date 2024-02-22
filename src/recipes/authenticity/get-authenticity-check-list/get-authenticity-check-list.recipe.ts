@@ -7,7 +7,8 @@ import {
   eCheckDiagnose,
   eCheckResult,
   eSecurityFeatureType,
-  ProcessResponse
+  ProcessResponse,
+  StatusContainer
 } from '@regulaforensics/document-reader-typings'
 
 import {
@@ -20,11 +21,15 @@ import {
 
 export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckListItem[] => {
   const containers = AuthenticityCheckListContainer.fromProcessResponse(input, false)
+  const statutes = StatusContainer.fromProcessResponse(input)
   const result: RAuthenticityCheckListItem[] = []
+
+  const checkResult = statutes.length ? statutes[0].Status.overallStatus : eCheckResult.WAS_NOT_DONE
 
   containers.forEach((container) => {
     const list = container.AuthenticityCheckList.List
     const current = RAuthenticityCheckListItem.fromPlain({
+      checkResult,
       page: container.page_idx || 1,
       images: [],
       ipi: [],
