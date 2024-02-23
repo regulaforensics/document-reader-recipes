@@ -11,7 +11,7 @@ import { RTextFieldValue } from './models'
 export function getTextFieldValue(input: ProcessResponse, fieldType: eVisualFieldType, allowDefault?: true): RTextFieldValue;
 export function getTextFieldValue(input: ProcessResponse, fieldType: eVisualFieldType, allowDefault?: false): RTextFieldValue | undefined;
 export function getTextFieldValue(input: ProcessResponse, fieldType: eVisualFieldType, allowDefault: boolean = true): RTextFieldValue | undefined {
-  const containers = TextResultContainer.fromProcessResponse(input, false)
+  const containers = TextResultContainer.fromProcessResponse(input)
 
   for (let i = 0; i < containers.length; i++) {
     const container = containers[i]

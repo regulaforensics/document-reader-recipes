@@ -5,7 +5,7 @@ import { eOpticalStatusField, RDetailedStatus, RDetailedStatusOptical } from './
 
 export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
   const result = new RDetailedStatus()
-  const container = StatusContainer.fromProcessResponse(input, false)
+  const container = StatusContainer.fromProcessResponse(input)
 
   if (!container.length) {
     result.optical = new RDetailedStatusOptical()

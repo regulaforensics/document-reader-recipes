@@ -13,7 +13,7 @@ import { eDataGroup, RRfidDataGroupStatus } from './models'
 * @returns {RRfidDataGroupStatus[]}
 */
 export const getRfidDataGroupsStatus = (input: ProcessResponse): RRfidDataGroupStatus[] => {
-  const binary = DocBinaryInfoContainer.fromProcessResponse(input, false)
+  const binary = DocBinaryInfoContainer.fromProcessResponse(input)
 
   const countOfDataGroups = Object.keys(eDataGroup).length / 2
   const result: RRfidDataGroupStatus[] = []
