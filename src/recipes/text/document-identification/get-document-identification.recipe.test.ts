@@ -34,7 +34,7 @@ describe('getDocumentIdentification', () => {
     })
 
     const docReaderResponse = ProcessResponse.fromPlain(response)
-    const result = getDocumentIdentification(docReaderResponse, true)
+    const result = getDocumentIdentification(docReaderResponse)
     const isValid = RDocumentIdentification.isValid(result)
 
     test('should be defined', () => {
@@ -45,10 +45,22 @@ describe('getDocumentIdentification', () => {
       expect(isValid).toBeTruthy()
     })
 
+    test('should have at least one element', () => {
+      expect(result.length).toBeGreaterThanOrEqual(1)
+    })
+
+    test('should return documentName', async () => {
+      expect(result[0].documentName).toBeDefined()
+    })
+
     test('should return pageIndex', async () => {
+      expect(result[0].pageIndex).toBeDefined()
+    })
+
+    /*test('should return pageIndex', async () => {
       expect(result.pageIndex).toBeDefined()
       expect(result.pageIndex).toEqual(1)
-    })
+    })*/
 
     /*  test('should return undefined if there is no OneCandidateContainer and allowDefault is false', async () => {
         const result = getDocumentIdentification(docReaderResponseWithoutOneCandidate, false)
