@@ -1,5 +1,6 @@
-import { IsDefined, ValidateNested, validateSync, ValidationError } from 'class-validator'
+import { IsDefined, IsEnum, ValidateNested, validateSync, ValidationError } from 'class-validator'
 import { plainToClass, Type } from 'class-transformer'
+import { eCheckResult } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
 import { iRDetailedStatusOptical, RDetailedStatusOptical } from './detailed-status-optical.model'
@@ -9,6 +10,12 @@ import { iRDetailedStatusOptical, RDetailedStatusOptical } from './detailed-stat
 * Get detailed status of a document processing
 */
 export interface iRDetailedStatus {
+  /**
+  * Overall status
+  * @type {eCheckResult}
+  */
+  overallStatus: eCheckResult
+
   /**
   * Optical statuses
   * @type {iRDetailedStatusOptical}
@@ -20,6 +27,14 @@ export interface iRDetailedStatus {
 * Get detailed status of a document processing
 */
 export class RDetailedStatus implements iRDetailedStatus {
+  /**
+  * Overall status
+  * @type {eCheckResult}
+  */
+  @IsDefined()
+  @IsEnum(eCheckResult)
+  overallStatus: eCheckResult
+
   /**
   * Optical statuses
   * @type {RDetailedStatusOptical}
