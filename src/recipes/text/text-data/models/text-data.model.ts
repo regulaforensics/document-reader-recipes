@@ -5,6 +5,7 @@ import { eCheckResult, eLCID } from '@regulaforensics/document-reader-typings'
 import { Default } from '@/decorators'
 import { AllowPrimitives } from '@/types'
 import { iRTextDataSource, RTextDataSource } from './text-data-source.model'
+import { iRTextDataComparison, RTextDataComparison } from './text-data-comparison.model'
 
 
 /**
@@ -39,6 +40,12 @@ export interface iRTextData {
   * @type {iRTextDataSource[]}
   */
   bySource: iRTextDataSource[]
+
+  /**
+  * Comparison results list
+  * @type {iRTextDataComparison[]}
+  */
+  comparisonList: iRTextDataComparison[]
 }
 
 /**
@@ -76,6 +83,15 @@ export class RTextData implements iRTextData {
   @IsEnum(eLCID)
   @Default(eLCID.ENGLISH_US)
   lcid: eLCID
+
+  /**
+  * Comparison results list
+  * @type {RTextDataComparison[]}
+  */
+  @IsDefined()
+  @ValidateNested({ each: true })
+  @Type(() => RTextDataComparison)
+  comparisonList: RTextDataComparison[]
 
   /**
   * Values of the text data field by source
