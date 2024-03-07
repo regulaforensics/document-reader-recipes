@@ -6,15 +6,9 @@ import { Expose } from 'class-transformer'
 
 
 /**
-* Summary of optical check results
+* Detailed status of optical checks
 */
 export interface iRDetailedStatusOptical {
-  /**
-  * Overall result of optical check
-  * @type {eCheckResult}
-  */
-  [eOpticalStatusField.OVERALL]: eCheckResult
-
   /**
   * The check status if document type was recognized or not.
   * @type {eCheckResult}
@@ -54,18 +48,9 @@ export interface iRDetailedStatusOptical {
 }
 
 /**
-* Summary of optical check results
+* Detailed status of optical checks
 */
 export class RDetailedStatusOptical implements iRDetailedStatusOptical {
-  /**
-  * Overall result of optical check
-  * @type {eCheckResult}
-  */
-  @Expose()
-  @IsDefined()
-  @IsEnum(eCheckResult)
-  [eOpticalStatusField.OVERALL]: eCheckResult
-
   /**
   * The check status if document type was recognized or not.
   * @type {eCheckResult}

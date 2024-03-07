@@ -1,4 +1,4 @@
-import { ProcessResponse, TextResultContainer } from '@regulaforensics/document-reader-typings'
+import { eCheckResult, ProcessResponse, TextResultContainer } from '@regulaforensics/document-reader-typings'
 
 import { RTextData, RTextDataSource } from './models'
 
@@ -26,20 +26,16 @@ export const getTextData = (input: ProcessResponse): RTextData[] => {
 
       availableSources.forEach((source) => {
         const validity = field.validityList.find(i => i.source === source)
+        const currentSource = new RTextDataSource()
+        const currentSourceValue = field.valueList.find((i) => i.source === source)
 
-        if (validity) {
-          const currentSource = new RTextDataSource()
-          const currentSourceValue = field.valueList.find((i) => i.source === source)
+        currentSource.checkResult = validity?.status || eCheckResult.WAS_NOT_DONE
+        currentSource.source = source
+        currentSource.value = currentSourceValue?.value || ''
+        currentSource.pageIndex = currentSourceValue?.pageIndex || 0
+        currentSource.probability = currentSourceValue?.probability || 0
 
-          currentSource.checkResult = validity.status
-          currentSource.source = source
-          currentSource.value = currentSourceValue?.value || ''
-          currentSource.pageIndex = currentSourceValue?.pageIndex || 0
-          currentSource.probability = currentSourceValue?.probability || 0
-
-
-          current.bySource.push(currentSource)
-        }
+        current.bySource.push(currentSource)
       })
 
       if (current.bySource.length) {

@@ -4,6 +4,8 @@ import { eCheckResult } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
 import { iRDetailedStatusOptical, RDetailedStatusOptical } from './detailed-status-optical.model'
+import { iRDetailedStatusSummary, RDetailedStatusSummary } from './detailed-status-summary.model'
+import { iRDetailedStatusRfid, RDetailedStatusRfid } from './detailed-status-rfid.model'
 
 
 /**
@@ -17,10 +19,22 @@ export interface iRDetailedStatus {
   overallStatus: eCheckResult
 
   /**
-  * Optical statuses
+  * Detailed status of optical checks
   * @type {iRDetailedStatusOptical}
   */
   optical: iRDetailedStatusOptical
+
+  /**
+  * Detailed status of RFID checks
+  * @type {iRDetailedStatusRfid}
+  */
+  rfId: iRDetailedStatusRfid
+
+  /**
+  * Summary of all checks
+  * @type {iRDetailedStatusOptical}
+  */
+  summary: iRDetailedStatusSummary
 }
 
 /**
@@ -43,6 +57,24 @@ export class RDetailedStatus implements iRDetailedStatus {
   @Type(() => RDetailedStatusOptical)
   @ValidateNested()
   optical: RDetailedStatusOptical
+
+  /**
+  * Detailed status of RFID checks
+  * @type {RDetailedStatusRfid}
+  */
+  @IsDefined()
+  @Type(() => RDetailedStatusRfid)
+  @ValidateNested()
+  rfId: RDetailedStatusRfid
+
+  /**
+  * Summary of all checks
+  * @type {RDetailedStatusSummary}
+  */
+  @IsDefined()
+  @Type(() => RDetailedStatusSummary)
+  @ValidateNested()
+  summary: RDetailedStatusSummary
 
   /**
   * Create a RDetailedStatus instance from plain object
