@@ -1,10 +1,5 @@
 export enum eOpticalStatusField {
   /**
-  * The summary of all optical checks.
-  */
-  OVERALL = 'OVERALL',
-
-  /**
   * The check status if document type was recognized or not.
   */
   DOC_TYPE = 'DOC_TYPE',

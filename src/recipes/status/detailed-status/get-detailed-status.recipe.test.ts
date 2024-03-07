@@ -49,10 +49,6 @@ describe('getDetailedStatus', () => {
       expect(result.optical[eOpticalStatusField.DOC_TYPE]).toBeDefined()
     })
 
-    test('should return OVERALL status', () => {
-      expect(result.optical[eOpticalStatusField.OVERALL]).toBeDefined()
-    })
-
     test('should return TEXT status', () => {
       expect(result.optical[eOpticalStatusField.TEXT]).toBeDefined()
     })
