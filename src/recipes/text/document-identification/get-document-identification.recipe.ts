@@ -18,7 +18,7 @@ export function getDocumentIdentification(input: ProcessResponse): RDocumentIden
     if (container.OneCandidate?.DocumentName) {
       result.push(RDocumentIdentification.fromPlain({
         documentName: container.OneCandidate.DocumentName,
-        pageIndex: container.page_idx || 1,
+        pageIndex: container.page_idx ?? 0,
       }))
     }
   }

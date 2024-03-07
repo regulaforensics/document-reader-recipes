@@ -24,15 +24,15 @@ export const getDocumentBarcodes = (input: ProcessResponse): RDocumentBarcode[] 
     }
 
     const current = new RDocumentBarcode()
-    current.pageIndex = container.page_idx || 1
+    current.pageIndex = container.page_idx ?? 0
     current.fields = []
 
     container.DocBarCodeInfo.pArrayFields.map((data, field) => {
       const currentField = new RDocumentBarcodeField()
 
       currentField.fieldIndex = field
-      currentField.resultCode = data.bcCodeResult || eBarCodeResultCodes.NO_ERR
-      currentField.type = data.bcType_DECODE || eBarCodeType.UNKNOWN
+      currentField.resultCode = data.bcCodeResult ?? eBarCodeResultCodes.NO_ERR
+      currentField.type = data.bcType_DECODE ?? eBarCodeType.UNKNOWN
       currentField.modulesData = []
 
       // field length
