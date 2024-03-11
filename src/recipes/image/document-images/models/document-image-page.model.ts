@@ -1,4 +1,5 @@
-import { IsDefined, IsInt, IsString } from 'class-validator'
+import { IsDefined, IsEnum, IsInt, IsString } from 'class-validator'
+import { eSource } from '@regulaforensics/document-reader-typings'
 
 
 /**
@@ -28,6 +29,12 @@ export interface iRDocumentImagePage {
   * @type {number}
   */
   height: number
+
+  /**
+  * Source of the image
+  * @type {eSource}
+  */
+  source: eSource
 }
 
 /**
@@ -65,4 +72,12 @@ export class RDocumentImagePage implements iRDocumentImagePage {
   @IsDefined()
   @IsInt()
   height: number
+
+  /**
+  * Source of the image
+  * @type {eSource}
+  */
+  @IsDefined()
+  @IsEnum(eSource)
+  source: eSource
 }

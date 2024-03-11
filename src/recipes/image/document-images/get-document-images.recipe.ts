@@ -59,6 +59,7 @@ export const getDocumentImages = async (
       current.src = src
       current.width = dimensions.width
       current.height = dimensions.height
+      current.source = page.source
 
       result[index].pages.push(current)
     }
@@ -116,6 +117,7 @@ export const getDocumentImagesSync = (
       current.src = src
       current.width = 0
       current.height = 0
+      current.source = page.source
 
       result[index].pages.push(current)
     }
