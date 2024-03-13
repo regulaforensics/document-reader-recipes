@@ -23,7 +23,7 @@ export const getImageQuality = (input: ProcessResponse): RImageQuality[] => {
     current.checkResult = container.ImageQualityCheckList.result
 
     container.ImageQualityCheckList.List.forEach((check) => {
-      if (!check.result || !check.type) {
+      if (typeof check.result === 'undefined' || typeof check.type === 'undefined') {
         return
       }
 
