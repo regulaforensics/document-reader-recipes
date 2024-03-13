@@ -4,12 +4,12 @@ import { eCheckResult } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
 import {
-  iRAuthenticityBarcodeCheckListItem,
-  iRAuthenticityImageCheckListItem,
-  iRAuthenticityIpiCheckListItem,
-  RAuthenticityBarcodeCheckListItem,
-  RAuthenticityImageCheckListItem,
-  RAuthenticityIpiCheckListItem
+  iRAuthenticityIdentCheckListItem,
+  iRAuthenticityPhotoIdentCheckListItem,
+  iRAuthenticitySecurityCheckListItem,
+  RAuthenticityIdentCheckListItem,
+  RAuthenticityPhotoIdentCheckListItem,
+  RAuthenticitySecurityCheckListItem
 } from './children'
 
 
@@ -31,21 +31,21 @@ export interface iRAuthenticityCheckListItem {
 
   /**
   * Images check list
-  * @type {iRAuthenticityImageCheckListItem[]}
+  * @type {iRAuthenticityIdentCheckListItem[]}
   */
-  images: iRAuthenticityImageCheckListItem[]
+  ident: iRAuthenticityIdentCheckListItem[]
 
   /**
   * IPI
-  * @type {iRAuthenticityIpiCheckListItem[]}
+  * @type {iRAuthenticityPhotoIdentCheckListItem[]}
   */
-  ipi: iRAuthenticityIpiCheckListItem[]
+  photoIdent: iRAuthenticityPhotoIdentCheckListItem[]
 
   /**
   * Barcode
-  * @type {iRAuthenticityBarcodeCheckListItem[]}
+  * @type {iRAuthenticitySecurityCheckListItem[]}
   */
-  barcode: iRAuthenticityBarcodeCheckListItem[]
+  security: iRAuthenticitySecurityCheckListItem[]
 }
 
 /**
@@ -70,30 +70,30 @@ export class RAuthenticityCheckListItem implements iRAuthenticityCheckListItem {
 
   /**
   * Images check list
-  * @type {RAuthenticityImageCheckListItem[]}
+  * @type {RAuthenticityIdentCheckListItem[]}
   */
   @IsDefined()
+  @Type(() => RAuthenticityIdentCheckListItem)
   @ValidateNested({ each: true })
-  @Type(() => RAuthenticityImageCheckListItem)
-  images: RAuthenticityImageCheckListItem[]
+  ident: RAuthenticityIdentCheckListItem[]
 
   /**
   * IPI
-  * @type {RAuthenticityIpiCheckListItem[]}
+  * @type {RAuthenticityPhotoIdentCheckListItem[]}
   */
   @IsDefined()
+  @Type(() => RAuthenticityPhotoIdentCheckListItem)
   @ValidateNested({ each: true })
-  @Type(() => RAuthenticityIpiCheckListItem)
-  ipi: RAuthenticityIpiCheckListItem[]
+  photoIdent: RAuthenticityPhotoIdentCheckListItem[]
 
   /**
   * Barcode
-  * @type {RAuthenticityBarcodeCheckListItem[]}
+  * @type {RAuthenticitySecurityCheckListItem[]}
   */
   @IsDefined()
+  @Type(() => RAuthenticitySecurityCheckListItem)
   @ValidateNested({ each: true })
-  @Type(() => RAuthenticityBarcodeCheckListItem)
-  barcode: RAuthenticityBarcodeCheckListItem[]
+  security: RAuthenticitySecurityCheckListItem[]
 
   /**
   * Create instance of RAuthenticityCheckListItem from plain object

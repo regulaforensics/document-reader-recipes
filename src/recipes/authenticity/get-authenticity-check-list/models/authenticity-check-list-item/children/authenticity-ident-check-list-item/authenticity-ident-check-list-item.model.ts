@@ -1,13 +1,25 @@
-import { IsDefined, IsEnum, IsNumber, IsString } from 'class-validator'
+import { IsDefined, IsEnum, IsIn, IsNumber, IsString } from 'class-validator'
 
-import { eCheckDiagnose, eCheckResult, eSecurityFeatureType } from '@regulaforensics/document-reader-typings'
+import {
+  AuthenticityIdentCheckResultTypes,
+  eCheckDiagnose,
+  eCheckResult,
+  eSecurityFeatureType,
+  type tAuthenticityIdentCheckResultType,
+} from '@regulaforensics/document-reader-typings'
 import { plainToClass } from 'class-transformer'
 
 
 /**
 * Authenticity image check list item
 */
-export interface iRAuthenticityImageCheckListItem {
+export interface iRAuthenticityIdentCheckListItem {
+  /**
+  * Feature type
+  * @type {tAuthenticityIdentCheckResultType}
+  */
+  securityFeatureType: tAuthenticityIdentCheckResultType
+
   /**
   * Identity percent of the etalon and sample image
   * @type {number}
@@ -48,7 +60,15 @@ export interface iRAuthenticityImageCheckListItem {
 /**
 * Authenticity image check list item
 */
-export class RAuthenticityImageCheckListItem implements iRAuthenticityImageCheckListItem {
+export class RAuthenticityIdentCheckListItem implements iRAuthenticityIdentCheckListItem {
+  /**
+  * Feature type
+  * @type {tAuthenticityIdentCheckResultType}
+  */
+  @IsDefined()
+  @IsIn(AuthenticityIdentCheckResultTypes)
+  securityFeatureType: tAuthenticityIdentCheckResultType
+
   /**
   * Identity percent of the etalon and sample image
   * @type {number}
@@ -99,9 +119,9 @@ export class RAuthenticityImageCheckListItem implements iRAuthenticityImageCheck
 
   /**
   * Create instance of RAuthenticityImageCheckListItem from plain object
-  * @param {iRAuthenticityImageCheckListItem} input - plain object
-  * @returns {RAuthenticityImageCheckListItem}
+  * @param {iRAuthenticityIdentCheckListItem} input - plain object
+  * @returns {RAuthenticityIdentCheckListItem}
   */
-  static fromPlain = (input: iRAuthenticityImageCheckListItem): RAuthenticityImageCheckListItem =>
-    plainToClass(RAuthenticityImageCheckListItem, input)
+  static fromPlain = (input: iRAuthenticityIdentCheckListItem): RAuthenticityIdentCheckListItem =>
+    plainToClass(RAuthenticityIdentCheckListItem, input)
 }

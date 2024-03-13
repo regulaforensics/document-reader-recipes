@@ -1,3 +1,3 @@
-export * from './authenticity-barcode-check-list-item'
-export * from './authenticity-image-check-list-item'
-export * from './authenticity-ipi-check-list-item'
+export * from './authenticity-ident-check-list-item'
+export * from './authenticity-photo-ident-check-list-item'
+export * from './authenticity-security-check-list-item'
