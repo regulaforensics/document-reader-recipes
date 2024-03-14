@@ -47,10 +47,6 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticityIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-          if (subItem.Type !== eAuthenticity.IMAGE_PATTERN) {
-            return
-          }
-
           current.ident.push(RAuthenticityIdentCheckListItem.fromPlain({
             securityFeatureType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
