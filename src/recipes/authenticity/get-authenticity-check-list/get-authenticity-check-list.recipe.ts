@@ -6,18 +6,34 @@ import {
   eAuthenticity,
   eCheckDiagnose,
   eCheckResult,
+  eLights,
   eSecurityFeatureType,
   ProcessResponse,
   StatusContainer
 } from '@regulaforensics/document-reader-typings'
 
 import {
-  RAuthenticitySecurityCheckListItem,
   RAuthenticityCheckListItem,
-  RAuthenticityIdentCheckListItem,
-  RAuthenticityPhotoIdentCheckListItem
+  RAuthenticityIdentCheck,
+  RAuthenticityPhotoIdentCheck,
+  RAuthenticitySecurityCheck,
 } from './models'
 
+
+const getLight = (checkType: eAuthenticity): eLights => {
+  switch (checkType) {
+    case eAuthenticity.UV_LUMINESCENCE:
+      return eLights.UV
+    case eAuthenticity.IR_B900:
+      return eLights.IR_FULL
+    case eAuthenticity.PHOTO_EMBED_TYPE:
+    case eAuthenticity.EXTENDED_MRZ_CHECK:
+    case eAuthenticity.OCR_SECURITY_TEXT:
+      return eLights.WHITE_FULL
+  }
+
+  return eLights.OFF
+}
 
 export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckListItem[] => {
   const containers = AuthenticityCheckListContainer.fromProcessResponse(input)
@@ -31,9 +47,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
     const current = RAuthenticityCheckListItem.fromPlain({
       checkResult,
       page: container.page_idx ?? 0,
-      ident: [],
-      photoIdent: [],
-      security: [],
+      checks: [],
     })
 
     list.forEach((item) => {
@@ -47,14 +61,20 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticityIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-          current.ident.push(RAuthenticityIdentCheckListItem.fromPlain({
-            securityFeatureType: subItem.Type,
+          const light = subItem.LightIndex
+
+          current.checks.push(RAuthenticityIdentCheck.fromPlain({
+            checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             image: subItem.Image.image,
             referenceImage: subItem.EtalonImage.image,
             similarity: subItem.PercentValue ?? 0,
             type: subItem.ElementType,
+            location: light === eLights.OFF ? undefined : {
+              light,
+              area: subItem.Area,
+            }
           }))
         })
       }
@@ -69,29 +89,37 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticityPhotoIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-          if (subItem.Type === eAuthenticity.IPI) {
-            if (subItem.ResultImages?.Images?.length) {
-              current.photoIdent.push(RAuthenticityPhotoIdentCheckListItem.fromPlain({
-                securityFeatureType: subItem.Type,
-                checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
-                diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
-                image: subItem.ResultImages.Images[0].image,
-              }))
-            }
+          const light = subItem.LightIndex
+
+          if (subItem.ResultImages?.Images?.length) {
+            current.checks.push(RAuthenticityPhotoIdentCheck.fromPlain({
+              checkType: subItem.Type,
+              checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
+              diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
+              image: subItem.ResultImages.Images[0].image,
+              location: light === eLights.OFF ? undefined : {
+                light,
+                area: subItem.Area,
+              }
+            }))
           }
         })
       }
 
       if (AuthenticitySecurityFeatureCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-          if (subItem.Type === eAuthenticity.BARCODE_FORMAT_CHECK) {
-            current.security.push(RAuthenticitySecurityCheckListItem.fromPlain({
-              securityFeatureType: subItem.Type,
-              checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
-              diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
-              feature: subItem.ElementType ?? eSecurityFeatureType.BLANK,
-            }))
-          }
+          const light = getLight(item.Type)
+
+          current.checks.push(RAuthenticitySecurityCheck.fromPlain({
+            checkType: subItem.Type,
+            checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
+            diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
+            feature: subItem.ElementType ?? eSecurityFeatureType.BLANK,
+            location: light === eLights.OFF ? undefined : {
+                light,
+                area: subItem.ElementRect,
+              }
+          }))
         })
       }
 
@@ -100,5 +128,5 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
     result.push(current)
   })
 
-  return result.filter((item) => item.security.length > 0 || item.ident.length > 0 || item.photoIdent.length > 0)
+  return result.filter((item) => item.checks.length > 0)
 }

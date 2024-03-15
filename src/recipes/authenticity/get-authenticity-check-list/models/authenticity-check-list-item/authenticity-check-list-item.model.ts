@@ -1,16 +1,10 @@
-import { plainToClass, Type } from 'class-transformer'
-import { IsDefined, IsEnum, IsInt, ValidateNested, validateSync, ValidationError } from 'class-validator'
+import { plainToClass, Transform } from 'class-transformer'
+import { IsArray, IsDefined, IsEnum, IsInt, ValidateNested, validateSync, ValidationError } from 'class-validator'
 import { eCheckResult } from '@regulaforensics/document-reader-typings'
 
 import { AllowPrimitives } from '@/types'
-import {
-  iRAuthenticityIdentCheckListItem,
-  iRAuthenticityPhotoIdentCheckListItem,
-  iRAuthenticitySecurityCheckListItem,
-  RAuthenticityIdentCheckListItem,
-  RAuthenticityPhotoIdentCheckListItem,
-  RAuthenticitySecurityCheckListItem
-} from './children'
+import { Default } from '@/decorators'
+import { iuRAuthenticityCheck, uRAuthenticityCheck } from './children'
 
 
 /**
@@ -30,22 +24,10 @@ export interface iRAuthenticityCheckListItem {
   checkResult: eCheckResult
 
   /**
-  * Images check list
-  * @type {iRAuthenticityIdentCheckListItem[]}
+  * Check list
+  * @type {iuRAuthenticityCheck[]}
   */
-  ident: iRAuthenticityIdentCheckListItem[]
-
-  /**
-  * IPI
-  * @type {iRAuthenticityPhotoIdentCheckListItem[]}
-  */
-  photoIdent: iRAuthenticityPhotoIdentCheckListItem[]
-
-  /**
-  * Barcode
-  * @type {iRAuthenticitySecurityCheckListItem[]}
-  */
-  security: iRAuthenticitySecurityCheckListItem[]
+  checks: iuRAuthenticityCheck[]
 }
 
 /**
@@ -69,31 +51,14 @@ export class RAuthenticityCheckListItem implements iRAuthenticityCheckListItem {
   checkResult: eCheckResult
 
   /**
-  * Images check list
-  * @type {RAuthenticityIdentCheckListItem[]}
+  * Array of different document authenticity checks
+  * @type {uRAuthenticityCheck[]}
   */
-  @IsDefined()
-  @Type(() => RAuthenticityIdentCheckListItem)
   @ValidateNested({ each: true })
-  ident: RAuthenticityIdentCheckListItem[]
-
-  /**
-  * IPI
-  * @type {RAuthenticityPhotoIdentCheckListItem[]}
-  */
-  @IsDefined()
-  @Type(() => RAuthenticityPhotoIdentCheckListItem)
-  @ValidateNested({ each: true })
-  photoIdent: RAuthenticityPhotoIdentCheckListItem[]
-
-  /**
-  * Barcode
-  * @type {RAuthenticitySecurityCheckListItem[]}
-  */
-  @IsDefined()
-  @Type(() => RAuthenticitySecurityCheckListItem)
-  @ValidateNested({ each: true })
-  security: RAuthenticitySecurityCheckListItem[]
+  @Transform(({ obj }) => uRAuthenticityCheck.transformList(obj.checks), { toClassOnly: true })
+  @IsArray()
+  @Default([])
+  checks: uRAuthenticityCheck[]
 
   /**
   * Create instance of RAuthenticityCheckListItem from plain object
