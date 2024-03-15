@@ -1,5 +1,7 @@
 import {
+  AuthenticityCheckListContainer,
   eGraphicFieldType,
+  eResultType,
   ImageField,
   ImagesResultContainer,
   ProcessResponse
@@ -22,6 +24,7 @@ export const getDocumentImages = async (
   const result: RDocumentImage[] = []
 
   const containers = ImagesResultContainer.fromProcessResponse(input)
+  const authenticityContainers = AuthenticityCheckListContainer.fromProcessResponse(input)
 
   if (!containers.length) {
     return result
@@ -36,7 +39,11 @@ export const getDocumentImages = async (
     for (let j = 0; j < field.valueList.length; j++) {
       const page = field.valueList[j]
 
-      const { lightIndex, pageIndex, value } = page
+      const { lightIndex, pageIndex, value, containerType } = page
+
+      if (containerType !== eResultType.DOCUMENT_IMAGE) {
+        continue
+      }
 
       let index = result.findIndex((i) => i.light === lightIndex && i.fieldType === field.fieldType)
 
@@ -95,7 +102,11 @@ export const getDocumentImagesSync = (
     for (let j = 0; j < field.valueList.length; j++) {
       const page = field.valueList[j]
 
-      const { lightIndex, pageIndex, value } = page
+      const { lightIndex, pageIndex, value, containerType } = page
+
+      if (containerType !== eResultType.DOCUMENT_IMAGE) {
+        continue
+      }
 
       let index = result.findIndex((i) => i.light === lightIndex && i.fieldType === field.fieldType)
 
