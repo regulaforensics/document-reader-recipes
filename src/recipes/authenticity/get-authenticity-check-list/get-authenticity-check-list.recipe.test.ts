@@ -38,8 +38,6 @@ describe('getAuthenticityCheckList', () => {
     test(`file '${file}': should return authenticity check list`, () => {
       const result = getAuthenticityCheckList(docReaderResponse)
 
-      console.log(JSON.stringify(result, null, 2))
-
       expect(result).toBeDefined()
     })
   })
