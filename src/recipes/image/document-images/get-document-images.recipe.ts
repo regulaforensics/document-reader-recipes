@@ -15,11 +15,13 @@ import { RDocumentImage, RDocumentImagePage } from './models'
 * Get document images
 * @param {ProcessResponse} input
 * @param {eGraphicFieldType[]|undefined} fieldTypes
+* @param {eResultType[]|undefined} containerTypes
 * @returns {Promise<RDocumentImage[]>}
 */
 export const getDocumentImages = async (
   input: ProcessResponse,
-  fieldTypes?: eGraphicFieldType[]
+  fieldTypes?: eGraphicFieldType[],
+  containerTypes?: eResultType[]
 ): Promise<RDocumentImage[]> => {
   const result: RDocumentImage[] = []
 
@@ -41,7 +43,7 @@ export const getDocumentImages = async (
 
       const { lightIndex, pageIndex, value, containerType } = page
 
-      if (containerType !== eResultType.DOCUMENT_IMAGE) {
+      if (containerTypes && !containerTypes.includes(containerType)) {
         continue
       }
 
@@ -79,11 +81,13 @@ export const getDocumentImages = async (
 * Get document images (synchronous version - without image dimensions)
 * @param {ProcessResponse} input
 * @param {eGraphicFieldType[]|undefined} fieldTypes
+* @param {eResultType[]|undefined} containerTypes
 * @returns {Promise<RDocumentImage[]>}
 */
 export const getDocumentImagesSync = (
   input: ProcessResponse,
-  fieldTypes?: eGraphicFieldType[]
+  fieldTypes?: eGraphicFieldType[],
+  containerTypes?: eResultType[]
 ): RDocumentImage[] => {
   const result: RDocumentImage[] = []
 
@@ -104,7 +108,7 @@ export const getDocumentImagesSync = (
 
       const { lightIndex, pageIndex, value, containerType } = page
 
-      if (containerType !== eResultType.DOCUMENT_IMAGE) {
+      if (containerTypes && !containerTypes.includes(containerType)) {
         continue
       }
 
