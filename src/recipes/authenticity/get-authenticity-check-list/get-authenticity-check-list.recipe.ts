@@ -73,7 +73,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             type: subItem.ElementType,
             location: light === eLights.OFF ? undefined : {
               light,
-              area: subItem.Area,
+              rect: subItem.Area,
             }
           }))
         })
@@ -99,7 +99,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
               image: subItem.ResultImages.Images[0].image,
               location: light === eLights.OFF ? undefined : {
                 light,
-                area: subItem.Area,
+                rect: subItem.Area,
               }
             }))
           }
@@ -117,7 +117,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             feature: subItem.ElementType ?? eSecurityFeatureType.BLANK,
             location: light === eLights.OFF ? undefined : {
                 light,
-                area: subItem.ElementRect,
+                rect: subItem.ElementRect,
               }
           }))
         })
