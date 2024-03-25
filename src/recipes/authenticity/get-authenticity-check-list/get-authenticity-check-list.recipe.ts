@@ -37,20 +37,23 @@ const getLight = (checkType: eAuthenticity): eLights => {
 
 export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckListItem[] => {
   const containers = AuthenticityCheckListContainer.fromProcessResponse(input)
-  const statutes = StatusContainer.fromProcessResponse(input)
   const result: RAuthenticityCheckListItem[] = []
-
-  const checkResult = statutes.length ? statutes[0].Status.overallStatus : eCheckResult.WAS_NOT_DONE
 
   containers.forEach((container) => {
     const list = container.AuthenticityCheckList.List
     const current = RAuthenticityCheckListItem.fromPlain({
-      checkResult,
+      checkResult: eCheckResult.WAS_NOT_DONE,
       page: container.page_idx ?? 0,
       checks: [],
     })
 
     list.forEach((item) => {
+      if (item.Result === eCheckResult.OK || item.Result === eCheckResult.WAS_NOT_DONE) {
+        current.checkResult = eCheckResult.OK
+      } else if (item.Result === eCheckResult.ERROR) {
+        current.checkResult = eCheckResult.ERROR
+      }
+
       /*
       if (AuthenticityFibersTypeCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
