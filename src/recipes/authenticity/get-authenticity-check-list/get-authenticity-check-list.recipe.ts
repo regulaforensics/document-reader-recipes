@@ -66,6 +66,11 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
         item.List.forEach((subItem) => {
           const light = subItem.LightIndex
 
+          if (subItem.ElementType === eSecurityFeatureType.PORTRAIT_COMPARISON_VS_CAMERA) {
+            // skip portrait vs camera check
+            return
+          }
+
           current.checks.push(RAuthenticityIdentCheck.fromPlain({
             checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
