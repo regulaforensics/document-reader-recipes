@@ -17,6 +17,8 @@ export const getTextData = (input: ProcessResponse): RTextData[] => {
     container.Text.fieldList.forEach((field) => {
       const current = new RTextData()
 
+      field.fieldType
+
       current.name = field.fieldName
       current.value = field.value
       current.lcid = field.lcid
