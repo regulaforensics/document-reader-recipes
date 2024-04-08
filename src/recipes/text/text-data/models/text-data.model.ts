@@ -1,6 +1,6 @@
 import { IsDefined, IsEnum, IsString, ValidateNested, validateSync, ValidationError } from 'class-validator'
 import { plainToClass, Type } from 'class-transformer'
-import { eCheckResult, eLCID } from '@regulaforensics/document-reader-typings'
+import { eCheckResult, eLCID, eVisualFieldType } from '@regulaforensics/document-reader-typings'
 
 import { Default } from '@/decorators'
 import { AllowPrimitives } from '@/types'
@@ -17,6 +17,12 @@ export interface iRTextData {
   * @type {string}
   */
   name: string
+
+  /**
+  * Type of the text data field
+  * @type {eVisualFieldType}
+  */
+  type: eVisualFieldType
 
   /**
   * Value of the text data field
@@ -59,6 +65,14 @@ export class RTextData implements iRTextData {
   @IsDefined()
   @IsString()
   name: string
+
+  /**
+  * Type of the text data field
+  * @type {eVisualFieldType}
+  */
+  @IsDefined()
+  @IsEnum(eVisualFieldType)
+  type: eVisualFieldType
 
   /**
   * Value of the text data field
