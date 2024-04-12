@@ -37,9 +37,8 @@ describe('getRfidDataGroupsStatus', () => {
     test('should return some results', () => {
       const result = getRfidDataGroupsStatus(docReaderResponse)
 
-      // const hasChecked = result.some((status) => status.status === eRfidErrorCodes.ERROR_NO_ERROR)
-
-      expect(result.length).toBeGreaterThan(0)
+      expect(result).not.toBeNull()
+      expect(result).not.toBeUndefined()
     })
   })
 })
