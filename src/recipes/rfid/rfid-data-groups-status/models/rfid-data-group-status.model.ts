@@ -1,16 +1,9 @@
 import { plainToClass } from 'class-transformer'
-import { IsDefined, IsEnum, IsIn, validateSync, ValidationError } from 'class-validator'
-import { eRfidErrorCodes } from '@regulaforensics/document-reader-typings'
+import { IsDefined, IsEnum, IsInt, validateSync, ValidationError } from 'class-validator'
 
 import { AllowPrimitives } from '@/types'
-import { eDataGroup } from './consts'
+import { eDataGroupReadStatus } from './consts'
 
-
-export type tRfidDataGroupStatus =
-  eRfidErrorCodes.ERROR_NOT_PERFORMED |
-  eRfidErrorCodes.ERROR_NOT_AVAILABLE |
-  eRfidErrorCodes.ERROR_NO_ERROR |
-  eRfidErrorCodes.ERROR_FAILED
 
 /**
 * Rfid data group status
@@ -18,15 +11,15 @@ export type tRfidDataGroupStatus =
 export interface iRRfidDataGroupStatus {
   /**
   * Data group
-  * @type {eDataGroup}
+  * @type {number}
   */
-  group: eDataGroup
+  group: number
 
   /**
-  * Status
-  * @type {tRfidDataGroupStatus}
+  * Data group read status
+  * @type {eDataGroupReadStatus}
   */
-  status: tRfidDataGroupStatus
+  status: eDataGroupReadStatus
 }
 
 /**
@@ -35,24 +28,19 @@ export interface iRRfidDataGroupStatus {
 export class RRfidDataGroupStatus implements iRRfidDataGroupStatus {
   /**
   * Data group
-  * @type {eDataGroup}
+  * @type {number}
   */
   @IsDefined()
-  @IsEnum(eDataGroup)
-  group: eDataGroup
+  @IsInt()
+  group: number
 
   /**
   * Status
-  * @type {tRfidDataGroupStatus}
+  * @type {eDataGroupReadStatus}
   */
   @IsDefined()
-  @IsIn([
-    eRfidErrorCodes.ERROR_NOT_PERFORMED,
-    eRfidErrorCodes.ERROR_NOT_AVAILABLE,
-    eRfidErrorCodes.ERROR_NO_ERROR,
-    eRfidErrorCodes.ERROR_FAILED
-  ])
-  status: tRfidDataGroupStatus
+  @IsEnum(eDataGroupReadStatus)
+  status: eDataGroupReadStatus
 
   /**
   * Create instance of RRfidDataGroupStatus from plain object
