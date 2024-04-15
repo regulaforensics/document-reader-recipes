@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, IsString, validateSync, ValidationError } from 'class-validator'
+import { IsBoolean, IsDefined, IsNumber, IsString, validateSync, ValidationError } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 
 import { AllowPrimitives } from '@/types'
@@ -19,6 +19,24 @@ export interface iRDocumentIdentification {
   * @type {string}
   */
   documentName: string
+
+  /**
+  * Is deprecated
+  * @type {boolean}
+  */
+  isDeprecated: boolean
+
+  /**
+  * Probability
+  * @type {number}
+  */
+  probability: number
+
+  /**
+  * Document id
+  * @type {number}
+  */
+  documentId: number
 }
 
 /**
@@ -40,6 +58,30 @@ export class RDocumentIdentification implements iRDocumentIdentification {
   @IsDefined()
   @IsString()
   documentName: string
+
+  /**
+  * Is deprecated
+  * @type {boolean}
+  */
+  @IsDefined()
+  @IsBoolean()
+  isDeprecated: boolean
+
+  /**
+  * Probability
+  * @type {number}
+  */
+  @IsDefined()
+  @IsNumber()
+  probability: number
+
+  /**
+  * Document id
+  * @type {number}
+  */
+  @IsDefined()
+  @IsNumber()
+  documentId: number
 
   /**
   * Create RDocumentIdentification from plain object
