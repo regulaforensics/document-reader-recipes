@@ -19,6 +19,9 @@ export function getDocumentIdentification(input: ProcessResponse): RDocumentIden
       result.push(RDocumentIdentification.fromPlain({
         documentName: container.OneCandidate.DocumentName,
         pageIndex: container.page_idx ?? 0,
+        isDeprecated: container.OneCandidate.FDSIDList.isDeprecated,
+        documentId: container.OneCandidate.ID,
+        probability: container.OneCandidate.P
       }))
     }
   }

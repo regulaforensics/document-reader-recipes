@@ -148,15 +148,25 @@ export const getRfidDataGroupsStatus = (input: ProcessResponse): RRfidDataGroupS
             break
         }
 
-        if (notRead.includes(mappedDg || 0)) {
-          status = eDataGroupReadStatus.NOT_PERFORMED
-        }
 
 
         if (mappedDg) {
           tmp.push({
             index: mappedDg,
             status
+          })
+        }
+      })
+
+      notRead.forEach((notReadDg) => {
+        const index = tmp.findIndex((item) => item.index === notReadDg)
+
+        if (index !== -1) {
+          tmp[index].status = eDataGroupReadStatus.NOT_PERFORMED
+        } else {
+          tmp.push({
+            index: notReadDg,
+            status: eDataGroupReadStatus.NOT_PERFORMED
           })
         }
       })
