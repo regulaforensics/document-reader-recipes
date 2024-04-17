@@ -1,1 +1,1 @@
-export * from './rfid-certificates-data.model'
+export * from './rfid-certificate-data.model'

@@ -7,7 +7,7 @@ import { AllowPrimitives } from '@/types'
 /**
 * Rfid certificates data
 */
-export interface iRRfidCertificatesData {
+export interface iRRfidCertificate {
   /**
   * Public key algorithm
   * @type {string}
@@ -37,12 +37,18 @@ export interface iRRfidCertificatesData {
   * @type {string}
   */
   validFrom: string
+
+  /**
+  * Valid to
+  * @type {string}
+  */
+  validTo: string
 }
 
 /**
 * Rfid certificates data
 */
-export class RRfidCertificatesData implements iRRfidCertificatesData {
+export class RRfidCertificate implements iRRfidCertificate {
   /**
   * Public key algorithm
   * @type {string}
@@ -84,16 +90,24 @@ export class RRfidCertificatesData implements iRRfidCertificatesData {
   validFrom: string
 
   /**
-  * Create instance of RRfidDataGroupStatus from plain object
-  * @param {AllowPrimitives<iRRfidCertificatesData>} input - plain object
-  * @returns {RRfidCertificatesData}
+  * Valid from
+  * @type {string}
   */
-  static fromPlain = (input: AllowPrimitives<iRRfidCertificatesData>): RRfidCertificatesData => plainToClass(RRfidCertificatesData, input)
+  @IsDefined()
+  @IsString()
+  validTo: string
+
+  /**
+  * Create instance of RRfidDataGroupStatus from plain object
+  * @param {AllowPrimitives<iRRfidCertificate>} input - plain object
+  * @returns {RRfidCertificate}
+  */
+  static fromPlain = (input: AllowPrimitives<iRRfidCertificate>): RRfidCertificate => plainToClass(RRfidCertificate, input)
 
   /**
   * Gets validation errors of RRfidDataGroupStatus
-  * @param {RRfidCertificatesData} input - input data
+  * @param {RRfidCertificate} input - input data
   * @returns {ValidationError[]} - array of validation errors
   */
-  static getValidationErrors = (input: RRfidCertificatesData): ValidationError[] => validateSync(input)
+  static getValidationErrors = (input: RRfidCertificate): ValidationError[] => validateSync(input)
 }

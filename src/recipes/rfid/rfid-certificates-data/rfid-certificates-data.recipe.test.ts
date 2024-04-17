@@ -37,6 +37,8 @@ describe('getRfidChecksSummary', () => {
     test(`file '${file}': should have certificates data`, () => {
       const result = getRfidCertificatesData(docReaderResponse)
 
+      console.log(result)
+
       expect(result).toBeDefined()
     })
   })

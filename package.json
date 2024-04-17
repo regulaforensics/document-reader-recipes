@@ -1,5 +1,5 @@
 {
-  "version": "0.0.47",
+  "version": "0.0.48",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
@@ -41,5 +41,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "date-fns": "^3.6.0"
+  }
 }
