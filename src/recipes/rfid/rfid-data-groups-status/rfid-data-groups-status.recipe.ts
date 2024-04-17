@@ -148,8 +148,6 @@ export const getRfidDataGroupsStatus = (input: ProcessResponse): RRfidDataGroupS
             break
         }
 
-
-
         if (mappedDg) {
           tmp.push({
             index: mappedDg,
@@ -162,7 +160,7 @@ export const getRfidDataGroupsStatus = (input: ProcessResponse): RRfidDataGroupS
         const index = tmp.findIndex((item) => item.index === notReadDg)
 
         if (index !== -1) {
-          tmp[index].status = eDataGroupReadStatus.NOT_PERFORMED
+          // tmp[index].status = eDataGroupReadStatus.NOT_PERFORMED
         } else {
           tmp.push({
             index: notReadDg,
@@ -200,7 +198,6 @@ export const getRfidDataGroupsStatus = (input: ProcessResponse): RRfidDataGroupS
 
             break
         }
-
 
         // fill array with missing data groups
         for (let i = 1; i <= fillTo; i++) {
