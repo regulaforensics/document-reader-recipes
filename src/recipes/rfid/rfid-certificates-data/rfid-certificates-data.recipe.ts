@@ -1,58 +1,44 @@
 import { DocBinaryInfoContainer, ProcessResponse } from '@regulaforensics/document-reader-typings'
 
-import { RRfidCertificatesData } from './models'
+import { convertGeneralizedDateToLocal } from '@/helpers'
+import { RRfidCertificate } from './models'
 
 
 /**
 * Get Rfid certificates data
 * @param {ProcessResponse} input
 * @param {string} [defaultValue='UNKNOWN'] - default value
-* @returns {RRfidCertificatesData}
+* @returns {RRfidCertificate[]}
 */
-export const getRfidCertificatesData = (input: ProcessResponse, defaultValue: string = 'UNKNOWN'): RRfidCertificatesData => {
+export const getRfidCertificatesData = (input: ProcessResponse, defaultValue: string = 'UNKNOWN'): RRfidCertificate[] => {
   const binary = DocBinaryInfoContainer.fromProcessResponse(input)
-  const result = new RRfidCertificatesData()
-
-  result.publicKeyAlgorithm = defaultValue
-  result.signatureAlgorithm = defaultValue
-  result.issuer = defaultValue
-  result.subject = defaultValue
-  result.validFrom = defaultValue
-
-
+  const result: RRfidCertificate[] = []
 
   binary.forEach((container) => {
     const sessionData = container.TDocBinaryInfo.RFID_BINARY_DATA.RFID_Session_Data
 
     sessionData.SecurityObjects.forEach((securityObject) => {
       securityObject.SignerInfos.forEach((signerInfo) => {
-        const issuer = signerInfo.Issuer.FriendlyName.Data
-        const signatureAlgorithm = signerInfo.SignatureAlgorithm
-        const publicKeyAlgorithm = signerInfo.DigestAlgorithm
-        const subject = signerInfo.SubjectKeyIdentifier.Data
-
-        if (issuer) {
-          result.issuer = issuer
-        }
-
-        if (signatureAlgorithm) {
-          result.signatureAlgorithm = signatureAlgorithm
-        }
-
-        if (publicKeyAlgorithm) {
-          result.publicKeyAlgorithm = publicKeyAlgorithm
-        }
-
-        if (subject) {
-          result.subject = subject
-        }
-
         signerInfo.CertificateChain.forEach((certificate) => {
-          const validFrom = certificate.Validity.NotBefore.Data
+          const current = new RRfidCertificate()
+          current.publicKeyAlgorithm = certificate.SubjectPKAlgorithm ?? defaultValue
+          current.signatureAlgorithm = certificate.SignatureAlgorithm ?? defaultValue
+          current.issuer = certificate.Issuer.FriendlyName.Data ?? defaultValue
+          current.subject = certificate.Subject.FriendlyName.Data ?? defaultValue
 
-          if (validFrom) {
-            result.validFrom = validFrom
+          if (certificate.Validity.NotBefore.Data) {
+            current.validFrom = convertGeneralizedDateToLocal(certificate.Validity.NotBefore.Data)
+          } else {
+            current.validFrom = defaultValue
           }
+
+          if (certificate.Validity.NotAfter.Data) {
+            current.validTo = convertGeneralizedDateToLocal(certificate.Validity.NotAfter.Data)
+          } else {
+            current.validTo = defaultValue
+          }
+
+          result.push(current)
         })
       })
     })
