@@ -13,12 +13,6 @@ import { iRTextDataComparison, RTextDataComparison } from './text-data-compariso
 */
 export interface iRTextData {
   /**
-  * Name of the text data field
-  * @type {string}
-  */
-  name: string
-
-  /**
   * Type of the text data field
   * @type {eVisualFieldType}
   */
@@ -58,14 +52,6 @@ export interface iRTextData {
 * Text data field with values by source
 */
 export class RTextData implements iRTextData {
-  /**
-  * Name of the text data field
-  * @type {string}
-  */
-  @IsDefined()
-  @IsString()
-  name: string
-
   /**
   * Type of the text data field
   * @type {eVisualFieldType}
