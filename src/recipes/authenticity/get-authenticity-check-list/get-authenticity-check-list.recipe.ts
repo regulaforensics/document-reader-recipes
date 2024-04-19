@@ -116,15 +116,14 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticitySecurityFeatureCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-          const light = getLight(item.Type)
 
           current.checks.push(RAuthenticitySecurityCheck.fromPlain({
             checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             feature: subItem.ElementType ?? eSecurityFeatureType.BLANK,
-            location: light === eLights.OFF ? undefined : {
-                light,
+            location: {
+                light: eLights.OFF,
                 rect: subItem.ElementRect,
               }
           }))
