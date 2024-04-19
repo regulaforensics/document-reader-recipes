@@ -123,7 +123,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             feature: subItem.ElementType ?? eSecurityFeatureType.BLANK,
             location: {
-                light: eLights.OFF,
+                light: undefined,
                 rect: subItem.ElementRect,
               }
           }))
