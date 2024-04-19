@@ -1,4 +1,4 @@
-import { IsDefined, IsEnum, IsNumber, ValidateNested } from 'class-validator'
+import { IsDefined, IsEnum, IsNumber, IsOptional, ValidateNested } from 'class-validator'
 import { Expose, Type } from 'class-transformer'
 import { eLights } from '@regulaforensics/document-reader-typings'
 
@@ -13,7 +13,7 @@ export interface iRLocation {
   * Light
   * @type {eLights}
   */
-  light: eLights
+  light?: eLights
 
   /**
   * Rect
@@ -31,9 +31,9 @@ export class RLocation implements iRLocation {
   * @type {eLights}
   */
   @Expose()
-  @IsDefined()
+  @IsOptional()
   @IsEnum(eLights)
-  light: eLights
+  light?: eLights
 
   /**
   * Rect
