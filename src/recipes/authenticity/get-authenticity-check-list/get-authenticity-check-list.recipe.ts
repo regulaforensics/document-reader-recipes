@@ -88,11 +88,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
         })
       }
 
-      console.log(item.Type)
-
       if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
-        console.log(11111111)
-
         item.List.forEach((subItem) => {
           current.checks.push(RAuthenticityTextCheck.fromPlain({
             checkType: subItem.Type,
