@@ -1,7 +1,9 @@
-import { IsDefined, IsEnum, IsString } from 'class-validator'
+import { IsDefined, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { eCheckResult, eSource } from '@regulaforensics/document-reader-typings'
 
 import { Default } from '@/decorators'
+import { iRRect, RRect } from '@/common-models'
+import { Expose, Type } from 'class-transformer'
 
 
 /**
@@ -30,13 +32,19 @@ export interface iRTextDataSource {
   * Field recognition probability
   * @type {number}
   */
-  probability: number;
+  probability: number
 
   /**
   * Page index
   * @type {number}
   */
-  pageIndex: number;
+  pageIndex: number
+
+  /**
+  * Rect
+  * @type {RRect|undefined}
+  */
+  rect?: iRRect
 }
 
 /**
@@ -74,7 +82,7 @@ export class RTextDataSource implements iRTextDataSource {
   */
   @IsDefined()
   @Default(0)
-  probability: number;
+  probability: number
 
   /**
   * Page index
@@ -82,5 +90,15 @@ export class RTextDataSource implements iRTextDataSource {
   */
   @IsDefined()
   @Default(0)
-  pageIndex: number;
+  pageIndex: number
+
+  /**
+  * Rect
+  * @type {RRect|undefined}
+  */
+  @Expose()
+  @IsOptional()
+  @Type(() => RRect)
+  @ValidateNested()
+  rect?: RRect
 }

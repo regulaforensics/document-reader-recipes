@@ -21,6 +21,7 @@ export const getTextData = (input: ProcessResponse): RTextData[] => {
       current.value = field.value
       current.lcid = field.lcid
       current.checkResult = field.status
+
       current.comparisonList = field.comparisonList?.map((i) => {
         const current =  new RTextDataComparison()
 
@@ -40,6 +41,7 @@ export const getTextData = (input: ProcessResponse): RTextData[] => {
 
         currentSource.checkResult = validity?.status ?? eCheckResult.WAS_NOT_DONE
         currentSource.source = source
+        currentSource.rect = currentSourceValue?.fieldRect
         currentSource.value = currentSourceValue?.value ?? ''
         currentSource.pageIndex = currentSourceValue?.pageIndex ?? 0
         currentSource.probability = currentSourceValue?.probability ?? 0
