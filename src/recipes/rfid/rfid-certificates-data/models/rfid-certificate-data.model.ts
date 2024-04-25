@@ -1,6 +1,7 @@
 import { plainToClass } from 'class-transformer'
-import { IsDefined, IsString, validateSync, ValidationError } from 'class-validator'
+import { IsDefined, IsEnum, IsString, validateSync, ValidationError } from 'class-validator'
 
+import { eRfidCertificateType } from '@regulaforensics/document-reader-typings'
 import { AllowPrimitives } from '@/types'
 
 
@@ -8,6 +9,12 @@ import { AllowPrimitives } from '@/types'
 * Rfid certificates data
 */
 export interface iRRfidCertificate {
+  /**
+  * Certificate type
+  * @type {eRfidCertificateType}
+  */
+  certificateType: eRfidCertificateType
+
   /**
   * Public key algorithm
   * @type {string}
@@ -49,6 +56,14 @@ export interface iRRfidCertificate {
 * Rfid certificates data
 */
 export class RRfidCertificate implements iRRfidCertificate {
+  /**
+  * Certificate type
+  * @type {eRfidCertificateType}
+  */
+  @IsDefined()
+  @IsEnum(eRfidCertificateType)
+  certificateType: eRfidCertificateType
+
   /**
   * Public key algorithm
   * @type {string}
