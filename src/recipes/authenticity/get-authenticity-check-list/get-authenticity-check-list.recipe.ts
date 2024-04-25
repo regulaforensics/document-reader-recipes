@@ -1,6 +1,6 @@
 import {
   AuthenticityCheckListContainer,
-  AuthenticityIdentCheckResult,
+  AuthenticityIdentCheckResult, AuthenticityOCRSecurityTextCheckResult,
   AuthenticityPhotoIdentCheckResult,
   AuthenticitySecurityFeatureCheckResult,
   eAuthenticity,
@@ -16,8 +16,9 @@ import {
   RAuthenticityCheckListItem,
   RAuthenticityIdentCheck,
   RAuthenticityPhotoIdentCheck,
-  RAuthenticitySecurityCheck,
+  RAuthenticitySecurityCheck, RAuthenticityTextCheck,
 } from './models'
+import * as process from 'node:process'
 
 
 const getLight = (checkType: eAuthenticity): eLights => {
@@ -87,13 +88,24 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
         })
       }
 
-      /*
-      if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
-        item.List.forEach((subItem) => {
+      console.log(item.Type)
 
+      if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
+        console.log(11111111)
+
+        item.List.forEach((subItem) => {
+          current.checks.push(RAuthenticityTextCheck.fromPlain({
+            checkType: subItem.Type,
+            checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
+            type: subItem.EtalonFieldType,
+            diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
+            location: {
+                light: subItem.LightType,
+                rect: subItem.EtalonFieldRect,
+              }
+          }))
         })
       }
-      */
 
       if (AuthenticityPhotoIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
@@ -135,5 +147,5 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
     result.push(current)
   })
 
-  return result.filter((item) => item.checks.length > 0)
+  return result//.filter((item) => item.checks.length > 0)
 }
