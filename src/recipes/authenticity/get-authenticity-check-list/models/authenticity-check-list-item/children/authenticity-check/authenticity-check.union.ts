@@ -4,9 +4,11 @@ import {
   iRAuthenticityIdentCheck,
   iRAuthenticityPhotoIdentCheck,
   iRAuthenticitySecurityCheck,
+  iRAuthenticityTextCheck,
   RAuthenticityIdentCheck,
   RAuthenticityPhotoIdentCheck,
   RAuthenticitySecurityCheck,
+  RAuthenticityTextCheck,
 } from './members'
 
 
@@ -17,7 +19,8 @@ import {
 export type uRAuthenticityCheck =
   RAuthenticityIdentCheck |
   RAuthenticityPhotoIdentCheck |
-  RAuthenticitySecurityCheck
+  RAuthenticitySecurityCheck |
+  RAuthenticityTextCheck
 
 /**
 * Structure serves for storing the results of a single type
@@ -26,7 +29,8 @@ export type uRAuthenticityCheck =
 export type iuRAuthenticityCheck =
   iRAuthenticityIdentCheck |
   iRAuthenticityPhotoIdentCheck |
-  iRAuthenticitySecurityCheck
+  iRAuthenticitySecurityCheck |
+  iRAuthenticityTextCheck
 
 /**
 * Structure serves for storing the results of a single type
@@ -62,6 +66,10 @@ export namespace uRAuthenticityCheck {
         case eAuthenticity.FINGERPRINT_COMPARISON:
         case eAuthenticity.LIVENESS:
           result.push(RAuthenticityIdentCheck.fromPlain(item))
+          break
+
+        case eAuthenticity.OCR_SECURITY_TEXT:
+          result.push(RAuthenticityTextCheck.fromPlain(item))
           break
 
         case eAuthenticity.IPI:
