@@ -1,4 +1,4 @@
-import { DocBinaryInfoContainer, ProcessResponse } from '@regulaforensics/document-reader-typings'
+import { DocBinaryInfoContainer, eRfidCertificateType, ProcessResponse } from '@regulaforensics/document-reader-typings'
 
 import { convertGeneralizedDateToLocal } from '@/helpers'
 import { RRfidCertificate } from './models'
@@ -21,6 +21,8 @@ export const getRfidCertificatesData = (input: ProcessResponse, defaultValue: st
       securityObject.SignerInfos.forEach((signerInfo) => {
         signerInfo.CertificateChain.forEach((certificate) => {
           const current = new RRfidCertificate()
+
+          current.certificateType = certificate.Type ?? eRfidCertificateType.UNDEFINED
           current.publicKeyAlgorithm = certificate.SubjectPKAlgorithm ?? defaultValue
           current.signatureAlgorithm = certificate.SignatureAlgorithm ?? defaultValue
           current.issuer = certificate.Issuer.FriendlyName.Data ?? defaultValue
