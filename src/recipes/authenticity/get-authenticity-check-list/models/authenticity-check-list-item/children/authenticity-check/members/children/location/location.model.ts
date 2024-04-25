@@ -1,8 +1,8 @@
-import { IsDefined, IsEnum, IsNumber, IsOptional, ValidateNested } from 'class-validator'
+import { IsDefined, IsEnum, IsOptional, ValidateNested } from 'class-validator'
 import { Expose, Type } from 'class-transformer'
 import { eLights } from '@regulaforensics/document-reader-typings'
 
-import { iRRect, RRect } from './children'
+import { iRRect, RRect } from '@/common-models'
 
 
 /**
