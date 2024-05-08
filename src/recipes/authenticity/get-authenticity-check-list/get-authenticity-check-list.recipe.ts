@@ -1,6 +1,8 @@
 import {
-  AuthenticityCheckListContainer, AuthenticityFibersTypeCheckResult,
-  AuthenticityIdentCheckResult, AuthenticityOCRSecurityTextCheckResult,
+  AuthenticityCheckListContainer,
+  AuthenticityFibersTypeCheckResult,
+  AuthenticityIdentCheckResult,
+  AuthenticityOCRSecurityTextCheckResult,
   AuthenticityPhotoIdentCheckResult,
   AuthenticitySecurityFeatureCheckResult,
   eAuthenticity,
@@ -8,32 +10,29 @@ import {
   eCheckResult,
   eLights,
   eSecurityFeatureType,
-  ProcessResponse,
-  StatusContainer, type tAuthenticityFibersTypeCheckResultType
+  ProcessResponse
 } from '@regulaforensics/document-reader-typings'
 
 import {
+  RAuthenticityCheckGroup,
+  RAuthenticityCheckGroupsItem,
+  RAuthenticityFibersCheck,
   RAuthenticityIdentCheck,
   RAuthenticityPhotoIdentCheck,
-  RAuthenticitySecurityCheck, RAuthenticityTextCheck,
-  RAuthenticityCheckGroupsItem, RAuthenticityCheckGroup, uRAuthenticityCheck, RAuthenticityFibersCheck, iRLocation
+  RAuthenticitySecurityCheck,
+  RAuthenticityTextCheck
 } from './models'
 
 
-const getLight = (checkType: eAuthenticity): eLights => {
-  switch (checkType) {
-    case eAuthenticity.UV_LUMINESCENCE:
-      return eLights.UV
-    case eAuthenticity.IR_B900:
-      return eLights.IR_FULL
-    case eAuthenticity.PHOTO_EMBED_TYPE:
-    case eAuthenticity.EXTENDED_MRZ_CHECK:
-    case eAuthenticity.OCR_SECURITY_TEXT:
-      return eLights.WHITE_FULL
-  }
-
-  return eLights.OFF
-}
+const skipFeatures = [
+  eSecurityFeatureType.PORTRAIT_COMPARISON_VS_CAMERA,
+  eSecurityFeatureType.PORTRAIT_COMPARISON_RFID_VS_CAMERA,
+  eSecurityFeatureType.PORTRAIT_COMPARISON_EXT_VS_VISUAL,
+  eSecurityFeatureType.PORTRAIT_COMPARISON_EXT_VS_RFID,
+  eSecurityFeatureType.PORTRAIT_COMPARISON_EXT_VS_CAMERA,
+  eSecurityFeatureType.PORTRAIT_COMPARISON_EXT_VS_BARCODE,
+  eSecurityFeatureType.PORTRAIT_COMPARISON_BARCODE_VS_CAMERA,
+]
 
 export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckGroupsItem[] => {
   const containers = AuthenticityCheckListContainer.fromProcessResponse(input)
@@ -84,8 +83,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
         item.List.forEach((subItem) => {
           const light = subItem.LightIndex
 
-          if (subItem.ElementType === eSecurityFeatureType.PORTRAIT_COMPARISON_VS_CAMERA) {
-            // skip portrait vs camera check
+          if (skipFeatures.includes(subItem.ElementType)) {
             return
           }
 
@@ -137,9 +135,9 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             type: subItem.EtalonFieldType,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             location: {
-                light: subItem.LightType,
-                rect: [subItem.EtalonFieldRect],
-              }
+              light: subItem.LightType,
+              rect: [subItem.EtalonFieldRect],
+            }
           }))
         })
       }
@@ -177,6 +175,10 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticitySecurityFeatureCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
+          if (skipFeatures.includes(subItem.ElementType)) {
+            return
+          }
+
           let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
 
           if (groupIndex === -1) {
