@@ -17,9 +17,9 @@ export interface iRLocation {
 
   /**
   * Rect
-  * @type {RRect}
+  * @type {RRect[]}
   */
-  rect: iRRect
+  rect: iRRect[]
 }
 
 /**
@@ -42,6 +42,6 @@ export class RLocation implements iRLocation {
   @Expose()
   @IsDefined()
   @Type(() => RRect)
-  @ValidateNested()
-  rect: RRect
+  @ValidateNested({ each: true })
+  rect: RRect[]
 }

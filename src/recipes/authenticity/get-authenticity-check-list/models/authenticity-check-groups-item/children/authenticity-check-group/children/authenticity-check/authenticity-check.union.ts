@@ -1,10 +1,11 @@
 import { eAuthenticity, isObject } from '@regulaforensics/document-reader-typings'
 
 import {
+  iRAuthenticityFibersCheck,
   iRAuthenticityIdentCheck,
   iRAuthenticityPhotoIdentCheck,
   iRAuthenticitySecurityCheck,
-  iRAuthenticityTextCheck,
+  iRAuthenticityTextCheck, RAuthenticityFibersCheck,
   RAuthenticityIdentCheck,
   RAuthenticityPhotoIdentCheck,
   RAuthenticitySecurityCheck,
@@ -17,6 +18,7 @@ import {
 * document authenticity check
 */
 export type uRAuthenticityCheck =
+  RAuthenticityFibersCheck |
   RAuthenticityIdentCheck |
   RAuthenticityPhotoIdentCheck |
   RAuthenticitySecurityCheck |
@@ -27,6 +29,7 @@ export type uRAuthenticityCheck =
 * document authenticity check
 */
 export type iuRAuthenticityCheck =
+  iRAuthenticityFibersCheck |
   iRAuthenticityIdentCheck |
   iRAuthenticityPhotoIdentCheck |
   iRAuthenticitySecurityCheck |
@@ -55,6 +58,10 @@ export namespace uRAuthenticityCheck {
       const { checkType } = item
 
       switch (checkType) {
+        case eAuthenticity.UV_FIBERS:
+          result.push(RAuthenticityFibersCheck.fromPlain(item))
+          break
+
         case eAuthenticity.IMAGE_PATTERN:
         case eAuthenticity.IR_VISIBILITY:
         case eAuthenticity.OVI:

@@ -1,5 +1,5 @@
 import {
-  AuthenticityCheckListContainer,
+  AuthenticityCheckListContainer, AuthenticityFibersTypeCheckResult,
   AuthenticityIdentCheckResult, AuthenticityOCRSecurityTextCheckResult,
   AuthenticityPhotoIdentCheckResult,
   AuthenticitySecurityFeatureCheckResult,
@@ -9,16 +9,15 @@ import {
   eLights,
   eSecurityFeatureType,
   ProcessResponse,
-  StatusContainer
+  StatusContainer, type tAuthenticityFibersTypeCheckResultType
 } from '@regulaforensics/document-reader-typings'
 
 import {
-  RAuthenticityCheckListItem,
   RAuthenticityIdentCheck,
   RAuthenticityPhotoIdentCheck,
   RAuthenticitySecurityCheck, RAuthenticityTextCheck,
+  RAuthenticityCheckGroupsItem, RAuthenticityCheckGroup, uRAuthenticityCheck, RAuthenticityFibersCheck, iRLocation
 } from './models'
-import * as process from 'node:process'
 
 
 const getLight = (checkType: eAuthenticity): eLights => {
@@ -36,16 +35,16 @@ const getLight = (checkType: eAuthenticity): eLights => {
   return eLights.OFF
 }
 
-export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckListItem[] => {
+export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityCheckGroupsItem[] => {
   const containers = AuthenticityCheckListContainer.fromProcessResponse(input)
-  const result: RAuthenticityCheckListItem[] = []
+  const result: RAuthenticityCheckGroupsItem[] = []
 
   containers.forEach((container) => {
     const list = container.AuthenticityCheckList.List
-    const current = RAuthenticityCheckListItem.fromPlain({
+    const current = RAuthenticityCheckGroupsItem.fromPlain({
       checkResult: eCheckResult.WAS_NOT_DONE,
       page: container.page_idx ?? 0,
-      checks: [],
+      groups: [],
     })
 
     list.forEach((item) => {
@@ -55,13 +54,31 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
         current.checkResult = eCheckResult.ERROR
       }
 
-      /*
       if (AuthenticityFibersTypeCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
+          let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
 
+          if (groupIndex === -1) {
+            current.groups.push(RAuthenticityCheckGroup.fromPlain({
+              group: subItem.Type,
+              checkResult: eCheckResult.WAS_NOT_DONE,
+              checks: []
+            }))
+
+            groupIndex = current.groups.length - 1
+          }
+
+          current.groups[groupIndex].checks.push(RAuthenticityFibersCheck.fromPlain({
+            checkType: subItem.Type,
+            location: {
+              light: undefined,
+              rect: subItem.RectArray,
+            },
+            diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
+            checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
+          }))
         })
       }
-      */
 
       if (AuthenticityIdentCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
@@ -72,7 +89,19 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             return
           }
 
-          current.checks.push(RAuthenticityIdentCheck.fromPlain({
+          let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
+
+          if (groupIndex === -1) {
+            current.groups.push(RAuthenticityCheckGroup.fromPlain({
+              group: subItem.Type,
+              checkResult: eCheckResult.WAS_NOT_DONE,
+              checks: []
+            }))
+
+            groupIndex = current.groups.length - 1
+          }
+
+          current.groups[groupIndex].checks.push(RAuthenticityIdentCheck.fromPlain({
             checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
@@ -82,7 +111,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             type: subItem.ElementType,
             location: light === eLights.OFF ? undefined : {
               light,
-              rect: subItem.Area,
+              rect: [subItem.Area],
             }
           }))
         })
@@ -90,14 +119,26 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
-          current.checks.push(RAuthenticityTextCheck.fromPlain({
+          let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
+
+          if (groupIndex === -1) {
+            current.groups.push(RAuthenticityCheckGroup.fromPlain({
+              group: subItem.Type,
+              checkResult: eCheckResult.WAS_NOT_DONE,
+              checks: []
+            }))
+
+            groupIndex = current.groups.length - 1
+          }
+
+          current.groups[groupIndex].checks.push(RAuthenticityTextCheck.fromPlain({
             checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
             type: subItem.EtalonFieldType,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             location: {
                 light: subItem.LightType,
-                rect: subItem.EtalonFieldRect,
+                rect: [subItem.EtalonFieldRect],
               }
           }))
         })
@@ -108,14 +149,26 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
           const light = subItem.LightIndex
 
           if (subItem.ResultImages?.Images?.length) {
-            current.checks.push(RAuthenticityPhotoIdentCheck.fromPlain({
+            let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
+
+            if (groupIndex === -1) {
+              current.groups.push(RAuthenticityCheckGroup.fromPlain({
+                group: subItem.Type,
+                checkResult: eCheckResult.WAS_NOT_DONE,
+                checks: []
+              }))
+
+              groupIndex = current.groups.length - 1
+            }
+
+            current.groups[groupIndex].checks.push(RAuthenticityPhotoIdentCheck.fromPlain({
               checkType: subItem.Type,
               checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
               diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
               image: subItem.ResultImages.Images[0].image,
               location: light === eLights.OFF ? undefined : {
                 light,
-                rect: subItem.Area,
+                rect: [subItem.Area],
               }
             }))
           }
@@ -124,24 +177,53 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       if (AuthenticitySecurityFeatureCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
+          let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
 
-          current.checks.push(RAuthenticitySecurityCheck.fromPlain({
+          if (groupIndex === -1) {
+            current.groups.push(RAuthenticityCheckGroup.fromPlain({
+              group: subItem.Type,
+              checkResult: eCheckResult.WAS_NOT_DONE,
+              checks: []
+            }))
+
+            groupIndex = current.groups.length - 1
+          }
+
+          current.groups[groupIndex].checks.push(RAuthenticitySecurityCheck.fromPlain({
             checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             feature: subItem.ElementType ?? eSecurityFeatureType.BLANK,
             location: {
                 light: undefined,
-                rect: subItem.ElementRect,
+                rect: [subItem.ElementRect],
               }
           }))
         })
       }
-
     })
+
+    current.groups.forEach((group, index) => {
+      group.checks.sort((a, b) => a.checkResult - b.checkResult)
+
+      if (group.checks.every(({ checkResult }) => checkResult === eCheckResult.OK)) {
+        current.groups[index].checkResult = eCheckResult.OK
+        return
+      }
+
+      if (group.checks.some(({ checkResult }) => checkResult === eCheckResult.WAS_NOT_DONE)) {
+        current.groups[index].checkResult = eCheckResult.WAS_NOT_DONE
+        return
+      }
+
+      current.groups[index].checkResult = eCheckResult.ERROR
+    })
+
+    current.groups.sort((a, b) => a.checkResult - b.checkResult)
 
     result.push(current)
   })
 
-  return result//.filter((item) => item.checks.length > 0)
+  return result
+    .sort((a, b) => a.page - b.page)
 }
