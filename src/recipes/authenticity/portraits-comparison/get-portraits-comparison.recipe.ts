@@ -35,8 +35,8 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
             return
           }
 
-          let left: ePortraitComparisonSource
-          let right: ePortraitComparisonSource
+          let left: ePortraitComparisonSource = ePortraitComparisonSource.PORTRAIT
+          let right: ePortraitComparisonSource = ePortraitComparisonSource.CAMERA
 
           switch (subItem.ElementType) {
             case eSecurityFeatureType.PORTRAIT_COMPARISON_VS_CAMERA:
@@ -63,11 +63,17 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
               left = ePortraitComparisonSource.EXTERNAL
               right = ePortraitComparisonSource.BARCODE
               break
-            default:
+            case eSecurityFeatureType.PORTRAIT_COMPARISON_BARCODE_VS_CAMERA:
               left = ePortraitComparisonSource.BARCODE
               right = ePortraitComparisonSource.CAMERA
               break
           }
+
+          const isReversed = [
+            eSecurityFeatureType.PORTRAIT_COMPARISON_VS_CAMERA,
+            eSecurityFeatureType.PORTRAIT_COMPARISON_RFID_VS_CAMERA,
+            eSecurityFeatureType.PORTRAIT_COMPARISON_BARCODE_VS_CAMERA
+          ].includes(subItem.ElementType)
 
           let index = result.findIndex((item) => item.source === left)
 
@@ -75,7 +81,9 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
             result.push(RPortraitsComparison.fromPlain({
               source: left,
               comparable: [],
-              image: subItem.EtalonImage.image
+              image: isReversed
+                ? subItem.Image.image
+                : subItem.EtalonImage.image
             }))
 
             index = result.length - 1
@@ -86,7 +94,9 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
               source: right,
               checkResult: subItem.ElementResult,
               similarity: subItem.PercentValue,
-              image: subItem.Image.image
+              image: isReversed
+                ? subItem.EtalonImage.image
+                : subItem.Image.image
             })
           )
         })
