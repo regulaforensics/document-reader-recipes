@@ -1,1 +1,1 @@
-export * from './authenticity-check-list-item'
+export * from './authenticity-check-groups-item'
