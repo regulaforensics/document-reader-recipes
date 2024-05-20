@@ -79,7 +79,7 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
 
           if (index === -1) {
             result.push(RPortraitsComparison.fromPlain({
-              source: left,
+              source: isReversed ? right : left,
               comparable: [],
               image: isReversed
                 ? subItem.Image.image
@@ -91,7 +91,7 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
 
           result[index].comparable.push(
             RPortraitComparisonComparable.fromPlain({
-              source: right,
+              source: isReversed ? left : right,
               checkResult: subItem.ElementResult,
               similarity: subItem.PercentValue,
               image: isReversed
