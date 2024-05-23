@@ -75,7 +75,7 @@ export const getPortraitsComparison = (input: ProcessResponse): RPortraitsCompar
             eSecurityFeatureType.PORTRAIT_COMPARISON_BARCODE_VS_CAMERA
           ].includes(subItem.ElementType)
 
-          let index = result.findIndex((item) => item.source === left)
+          let index = result.findIndex((item) => isReversed ? item.source === right : item.source === left)
 
           if (index === -1) {
             result.push(RPortraitsComparison.fromPlain({
