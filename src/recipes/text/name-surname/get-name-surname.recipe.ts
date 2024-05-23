@@ -22,7 +22,6 @@ export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'U
     checkResult: eCheckResult.ERROR,
     lcid: eLCID.LATIN
   })
-  const candidates: RNameSurname[] = []
 
   if (!containers.length) {
     return defaultValue
@@ -42,24 +41,6 @@ export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'U
         lcid: field.lcid
       })
     }
-
-    const latinIndexSurname = Text.fieldList.findIndex((i) => i.lcid === eLCID.LATIN && i.fieldType === eVisualFieldType.SURNAME)
-    const latinIndexName = Text.fieldList.findIndex((i) => i.lcid === eLCID.LATIN && i.fieldType === eVisualFieldType.GIVEN_NAMES)
-
-    if (latinIndexSurname !== -1 && latinIndexName !== -1) {
-      const surname = Text.fieldList[latinIndexSurname]
-      const name = Text.fieldList[latinIndexName]
-
-      candidates.push(RNameSurname.fromPlain({
-        value: `${surname.value} ${name.value}`,
-        checkResult: surname.status,
-        lcid: surname.lcid
-      }))
-    }
-  }
-
-  if (candidates.length) {
-    return candidates[0]
   }
 
   for (let i = 0; i < containers.length; i++) {
@@ -76,29 +57,7 @@ export const getNameSurname = (input: ProcessResponse, unknownValue: string = 'U
           lcid: field.lcid
         })
       }
-
-      if (field.fieldType === eVisualFieldType.SURNAME && field.value) {
-        const nameField = Text.fieldList.find((i) => i.fieldType === eVisualFieldType.GIVEN_NAMES && i.lcid === field.lcid)
-
-        if (nameField) {
-          candidates.push(RNameSurname.fromPlain({
-            value: `${field.value} ${nameField.value}`,
-            checkResult: field.status,
-            lcid: field.lcid
-          }))
-        }
-      }
     }
-  }
-
-  const okCandidates = candidates.filter((i) => i.checkResult === eCheckResult.OK)
-
-  if (okCandidates.length) {
-    return okCandidates[0]
-  }
-
-  if (candidates.length) {
-    return candidates[0]
   }
 
   return defaultValue
