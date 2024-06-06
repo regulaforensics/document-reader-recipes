@@ -1,5 +1,5 @@
 import { IsDefined, IsEnum, IsString, validateSync, ValidationError } from 'class-validator'
-import { eCheckResult } from '@regulaforensics/document-reader-typings'
+import { eCheckResult, eLCID } from '@regulaforensics/document-reader-typings'
 import { plainToClass } from 'class-transformer'
 
 import { Default } from '@/decorators'
@@ -21,6 +21,12 @@ export interface iRTextFieldValue {
   * @type {eCheckResult}
   */
   status: eCheckResult
+
+  /**
+  * LCID
+  * @type {eLCID}
+  */
+  lcid: eLCID
 }
 
 /**
@@ -44,6 +50,11 @@ export class RTextFieldValue implements iRTextFieldValue {
   @IsEnum(eCheckResult)
   @Default(eCheckResult.WAS_NOT_DONE)
   status: eCheckResult
+
+  @IsDefined()
+  @IsEnum(eLCID)
+  @Default(eLCID.LATIN)
+  lcid: eLCID
 
   /**
   * Create instance of RTextFieldValue from plain object
