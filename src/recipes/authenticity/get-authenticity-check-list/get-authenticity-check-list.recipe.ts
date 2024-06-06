@@ -47,12 +47,6 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
     })
 
     list.forEach((item) => {
-      if (item.Result === eCheckResult.OK || item.Result === eCheckResult.WAS_NOT_DONE) {
-        current.checkResult = eCheckResult.OK
-      } else if (item.Result === eCheckResult.ERROR) {
-        current.checkResult = eCheckResult.ERROR
-      }
-
       if (AuthenticityFibersTypeCheckResult.isBelongs(item)) {
         item.List.forEach((subItem) => {
           let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
@@ -220,6 +214,15 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
 
       current.groups[index].checkResult = eCheckResult.ERROR
     })
+
+    if (current.groups.every(({ checkResult }) => checkResult === eCheckResult.OK)) {
+      current.checkResult = eCheckResult.OK
+    } else if (current.groups.some(({ checkResult }) => checkResult === eCheckResult.WAS_NOT_DONE)) {
+      current.checkResult = eCheckResult.WAS_NOT_DONE
+      return
+    } else {
+      current.checkResult = eCheckResult.ERROR
+    }
 
     current.groups.sort((a, b) => a.checkResult - b.checkResult)
 
