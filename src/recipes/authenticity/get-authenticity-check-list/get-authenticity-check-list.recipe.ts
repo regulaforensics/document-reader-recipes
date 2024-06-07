@@ -176,12 +176,12 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
       }
 
       if (AuthenticitySecurityFeatureCheckResult.isBelongs(item)) {
+        let groupIndex = current.groups.findIndex((group) => group.group === item.Type)
+
         item.List.forEach((subItem) => {
           if (skipFeatures.includes(subItem.ElementType)) {
             return
           }
-
-          let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
 
           if (groupIndex === -1) {
             current.groups.push(RAuthenticityCheckGroup.fromPlain({
@@ -204,6 +204,14 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
               }
           }))
         })
+
+        if (!item.List?.length) {
+          current.groups.push(RAuthenticityCheckGroup.fromPlain({
+            group: item.Type,
+            checkResult: item.Result,
+            checks: []
+          }))
+        }
       }
     })
 
