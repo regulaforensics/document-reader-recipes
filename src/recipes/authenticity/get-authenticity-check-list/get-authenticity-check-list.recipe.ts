@@ -110,9 +110,9 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
       }
 
       if (AuthenticityOCRSecurityTextCheckResult.isBelongs(item)) {
-        item.List.forEach((subItem) => {
-          let groupIndex = current.groups.findIndex((group) => group.group === subItem.Type)
+        let groupIndex = current.groups.findIndex((group) => group.group === item.Type)
 
+        item.List.forEach((subItem) => {
           if (groupIndex === -1) {
             current.groups.push(RAuthenticityCheckGroup.fromPlain({
               group: subItem.Type,
@@ -134,6 +134,14 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             }
           }))
         })
+
+        if (!item.List?.length) {
+          current.groups.push(RAuthenticityCheckGroup.fromPlain({
+            group: item.Type,
+            checkResult: item.Result,
+            checks: []
+          }))
+        }
       }
 
       if (AuthenticityPhotoIdentCheckResult.isBelongs(item)) {
