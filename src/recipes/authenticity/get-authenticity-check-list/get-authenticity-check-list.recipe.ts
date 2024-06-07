@@ -101,7 +101,7 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
             referenceImage: subItem.EtalonImage.image,
             similarity: subItem.PercentValue ?? 0,
             type: subItem.ElementType,
-            location: light === eLights.OFF ? undefined : {
+            location: {
               light,
               rect: [subItem.Area],
             }
