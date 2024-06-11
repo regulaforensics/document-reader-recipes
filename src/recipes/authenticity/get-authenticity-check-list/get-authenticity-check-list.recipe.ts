@@ -5,7 +5,6 @@ import {
   AuthenticityOCRSecurityTextCheckResult,
   AuthenticityPhotoIdentCheckResult,
   AuthenticitySecurityFeatureCheckResult,
-  eAuthenticity,
   eCheckDiagnose,
   eCheckResult,
   eLights,
@@ -124,13 +123,22 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
           }
 
           current.groups[groupIndex].checks.push(RAuthenticityTextCheck.fromPlain({
+            reference: {
+              type: subItem.EtalonResultType,
+              reference: subItem.EtalonResultOCR,
+              result: subItem.SecurityTextResultOCR,
+              location: {
+                light: subItem.EtalonLightType,
+                rect: [subItem.EtalonFieldRect],
+              }
+            },
             checkType: subItem.Type,
             checkResult: subItem.ElementResult ?? eCheckResult.WAS_NOT_DONE,
             type: subItem.EtalonFieldType,
             diagnose: subItem.ElementDiagnose ?? eCheckDiagnose.UNKNOWN,
             location: {
               light: subItem.LightType,
-              rect: [subItem.EtalonFieldRect],
+              rect: [subItem.FieldRect],
             }
           }))
         })

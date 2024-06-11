@@ -1,6 +1,5 @@
 import { IsDefined, IsEnum, IsIn, ValidateNested } from 'class-validator'
 import { plainToInstance, Type } from 'class-transformer'
-
 import {
   AuthenticityOCRSecurityTextCheckResultTypes,
   eCheckDiagnose,
@@ -8,14 +7,17 @@ import {
   eVisualFieldType,
   type tAuthenticityOCRSecurityTextCheckResultType,
 } from '@regulaforensics/document-reader-typings'
+
 import { aAuthenticityCheck } from '../authenticity-check.abstract'
-import { iRLocation, RLocation } from './children'
+import { iRAuthenticityTextCheckReference, iRLocation, RAuthenticityTextCheckReference, RLocation } from './children'
 
 
 /**
 * Authenticity text check result type
 */
 export interface iRAuthenticityTextCheck extends aAuthenticityCheck {
+  reference: iRAuthenticityTextCheckReference
+
   /**
   * Feature type
   * @type {tAuthenticityOCRSecurityTextCheckResultType}
@@ -51,6 +53,11 @@ export interface iRAuthenticityTextCheck extends aAuthenticityCheck {
 * Authenticity text check result type
 */
 export class RAuthenticityTextCheck extends aAuthenticityCheck implements iRAuthenticityTextCheck {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => RAuthenticityTextCheckReference)
+  reference: RAuthenticityTextCheckReference
+
   /**
   * Feature type
   * @type {tAuthenticityOCRSecurityTextCheckResultType}
