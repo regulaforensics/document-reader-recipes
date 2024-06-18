@@ -38,6 +38,8 @@ export const getDetailedStatus = (input: ProcessResponse): RDetailedStatus => {
     result.summary[eSummaryStatusField.PORTRAIT] = eCheckResult.WAS_NOT_DONE
     result.summary[eSummaryStatusField.RFID] = eCheckResult.WAS_NOT_DONE
     result.summary[eSummaryStatusField.STOP_LIST] = eCheckResult.WAS_NOT_DONE
+
+    return result
   }
 
   const status = container[0].Status
