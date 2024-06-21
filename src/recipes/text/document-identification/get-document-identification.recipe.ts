@@ -21,7 +21,8 @@ export function getDocumentIdentification(input: ProcessResponse): RDocumentIden
         pageIndex: container.page_idx ?? 0,
         isDeprecated: container.OneCandidate.FDSIDList.isDeprecated,
         documentId: container.OneCandidate.ID,
-        probability: container.OneCandidate.P
+        probability: container.OneCandidate.P,
+        documentCategory: container.OneCandidate.FDSIDList.dDescription
       }))
     }
   }
