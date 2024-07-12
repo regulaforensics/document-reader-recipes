@@ -10,4 +10,4 @@ import { getGraphicField } from './get-graphic-field.recipe'
 * @returns {Promise<RGraphicField>}
 */
 export const getDocumentFront = (input: ProcessResponse): Promise<RGraphicField> =>
-  getGraphicField(input, eGraphicFieldType.DOCUMENT_FRONT)
+  getGraphicField(input, eGraphicFieldType.DOCUMENT_IMAGE)
