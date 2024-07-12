@@ -1,15 +1,16 @@
 {
-  "version": "0.0.71",
+  "version": "0.0.73",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
   "license": "MIT",
   "scripts": {
-    "build": "vite build",
+    "check-types": "tsc --noEmit --skipLibCheck",
+    "build": "npm run check-types && vite build",
     "test": "jest"
   },
   "peerDependencies": {
-    "@regulaforensics/document-reader-typings": ">=0.0.31",
+    "@regulaforensics/document-reader-typings": ">=0.0.32",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
