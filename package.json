@@ -1,11 +1,12 @@
 {
-  "version": "0.0.72",
+  "version": "0.0.73",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
   "license": "MIT",
   "scripts": {
-    "build": "vite build",
+    "check-types": "tsc --noEmit --skipLibCheck",
+    "build": "npm run check-types && vite build",
     "test": "jest"
   },
   "peerDependencies": {

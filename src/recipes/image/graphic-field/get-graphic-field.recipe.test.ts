@@ -38,7 +38,7 @@ describe('getGraphicField', () => {
     let result: RGraphicField
 
     test(`file '${file}': should be defined`, async () => {
-      result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT)
+      result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_IMAGE)
 
       expect(result).toBeDefined()
     })
@@ -48,7 +48,7 @@ describe('getGraphicField', () => {
     })
 
     test(`file '${file}': should be able to return default image`, async () => {
-      const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_FRONT, true, [eLights.HOLO])
+      const result = await getGraphicField(docReaderResponse, eGraphicFieldType.DOCUMENT_IMAGE, true, [eLights.HOLO])
 
       expect(result.src).toMatch(/^data:image\/png;base64/)
     })
