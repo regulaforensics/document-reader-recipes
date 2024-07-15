@@ -1,4 +1,4 @@
-import { IsDefined, IsEnum, IsInt, IsString } from 'class-validator'
+import { IsDefined, IsEnum, IsInt, IsOptional, IsString } from 'class-validator'
 import { eSource } from '@regulaforensics/document-reader-typings'
 
 
@@ -14,9 +14,9 @@ export interface iRDocumentImagePage {
 
   /**
   * Image file in base64 url representation
-  * @type {string}
+  * @type {string|undefined}
   */
-  src: string
+  src?: string
 
   /**
   * Image width
@@ -51,11 +51,11 @@ export class RDocumentImagePage implements iRDocumentImagePage {
 
   /**
   * Image file in base64 url representation
-  * @type {string}
+  * @type {string|undefined}
   */
-  @IsDefined()
+  @IsOptional()
   @IsString()
-  src: string
+  src?: string
 
   /**
   * Image width
