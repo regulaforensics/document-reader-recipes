@@ -60,8 +60,12 @@ export const getDocumentImages = async (
         index = result.push(current) - 1
       }
 
-      const src = `data:image/jpeg;base64,${value}`
-      const dimensions = await getImageDimensions(src)
+      const src = value ? `data:image/jpeg;base64,${value}` : undefined
+      let dimensions = { width: 0, height: 0 }
+
+      if (src) {
+        dimensions = await getImageDimensions(src)
+      }
 
       const current = new RDocumentImagePage()
       current.pageIndex = pageIndex
@@ -125,7 +129,7 @@ export const getDocumentImagesSync = (
         index = result.push(current) - 1
       }
 
-      const src = `data:image/jpeg;base64,${value}`
+      const src = value ? `data:image/jpeg;base64,${value}` : undefined
 
       const current = new RDocumentImagePage()
       current.pageIndex = pageIndex
