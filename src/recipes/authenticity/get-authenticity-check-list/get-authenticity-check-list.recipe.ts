@@ -61,6 +61,9 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
           }
 
           current.groups[groupIndex].checks.push(RAuthenticityFibersCheck.fromPlain({
+            colorValues: subItem.ColorValues,
+            rectCount: subItem.RectCount,
+            expectedCount: subItem.ExpectedCount,
             checkType: subItem.Type,
             location: {
               light: undefined,
