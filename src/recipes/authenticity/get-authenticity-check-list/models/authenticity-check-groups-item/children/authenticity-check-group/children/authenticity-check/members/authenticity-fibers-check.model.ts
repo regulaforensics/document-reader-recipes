@@ -1,4 +1,4 @@
-import { IsDefined, IsEnum, IsIn, IsOptional, ValidateNested } from 'class-validator'
+import { IsDefined, IsEnum, IsIn, IsInt, IsOptional, ValidateNested } from 'class-validator'
 import {
   AuthenticityFibersTypeCheckResultTypes,
   eCheckDiagnose,
@@ -7,6 +7,7 @@ import {
 } from '@regulaforensics/document-reader-typings'
 import { plainToInstance, Type } from 'class-transformer'
 
+import { Default } from '@/decorators'
 import { aAuthenticityCheck } from '../authenticity-check.abstract'
 import { iRLocation, RLocation } from './children'
 
@@ -35,6 +36,24 @@ export interface iRAuthenticityFibersCheck extends aAuthenticityCheck {
   * @type {eCheckResult}
   */
   checkResult: eCheckResult
+
+  /**
+  * Fibers’ color (B, G, R)
+  * @type {number[]}
+  */
+  colorValues: number[]
+
+  /**
+  * Number of RectArray, Width, Length, Area items
+  * @type {number}
+  */
+  rectCount: number
+
+  /**
+  * Expected fibers number
+  * @type {number}
+  */
+  expectedCount: number
 }
 
 export class RAuthenticityFibersCheck extends aAuthenticityCheck implements iRAuthenticityFibersCheck {
@@ -70,6 +89,33 @@ export class RAuthenticityFibersCheck extends aAuthenticityCheck implements iRAu
   @IsDefined()
   @IsEnum(eCheckResult)
   checkResult: eCheckResult
+
+  /**
+  * Fibers’ color (B, G, R)
+  * @type {number[]}
+  */
+  @IsDefined()
+  @Default([0,0,0])
+  @IsInt({ each: true })
+  colorValues: number[]
+
+  /**
+  * Number of RectArray, Width, Length, Area items
+  * @type {number}
+  */
+  @IsDefined()
+  @Default(0)
+  @IsInt()
+  rectCount: number
+
+  /**
+  * Expected fibers number
+  * @type {number}
+  */
+  @IsDefined()
+  @Default(0)
+  @IsInt()
+  expectedCount: number
 
   /**
   * Create instance of RAuthenticityImageCheckListItem from plain object
