@@ -21,6 +21,7 @@ import {
   RAuthenticitySecurityCheck,
   RAuthenticityTextCheck
 } from './models'
+import { mergeStatuses } from '@/helpers'
 
 
 const skipFeatures = [
@@ -242,14 +243,8 @@ export const getAuthenticityCheckList = (input: ProcessResponse): RAuthenticityC
       current.groups[index].checkResult = eCheckResult.ERROR
     })
 
-    if (current.groups.every(({ checkResult }) => checkResult === eCheckResult.OK)) {
-      current.checkResult = eCheckResult.OK
-    } else if (current.groups.some(({ checkResult }) => checkResult === eCheckResult.WAS_NOT_DONE)) {
-      current.checkResult = eCheckResult.WAS_NOT_DONE
-      return
-    } else {
-      current.checkResult = eCheckResult.ERROR
-    }
+    const checkResults = current.groups.map(({ checkResult }) => checkResult)
+    current.checkResult = mergeStatuses(checkResults)
 
     current.groups.sort((a, b) => a.checkResult - b.checkResult)
 
