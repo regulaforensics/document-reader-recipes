@@ -1,5 +1,5 @@
 {
-  "version": "0.0.77",
+  "version": "0.0.78",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@regulaforensics/document-reader-typings": ">=7.3.64",
+    "@regulaforensics/document-reader-typings": ">=7.3.75",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
@@ -24,7 +24,7 @@
     "ts-jest": "^29.2.3",
     "typescript": "^5.5.4",
     "vite": "^5.3.4",
-    "vite-plugin-dts": "^2.3.0"
+    "vite-plugin-dts": "^4.0.0-beta.2"
   },
   "source": "src/index.ts",
   "main": "dist/index.cjs",
