@@ -1,5 +1,5 @@
 {
-  "version": "0.0.78",
+  "version": "0.0.79",
   "author": "Regula Forensics, Inc.",
   "name": "@regulaforensics/document-reader-recipes",
   "description": "Document Reader Recipes",
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@regulaforensics/document-reader-typings": ">=7.3.75",
+    "@regulaforensics/document-reader-typings": ">=7.3.77",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
